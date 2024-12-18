@@ -1,0 +1,66 @@
+.onboarding-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f3e8ff, #d4b8ff, #c8a2ff);
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.progress-container {
+  width: 100%;
+}
+
+.progress-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  margin-top: 20px;
+  padding-left: 5%;
+  padding-right: 5%;
+  margin-bottom: 15px;
+}
+
+.progress-indicator .icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  background-color: #925fe2;
+}
+
+.progress-indicator .icon-circle {
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  background-color: #fff;
+}
+
+.progress-indicator .x-line {
+  flex: 1;
+  height: 2px;
+  background-color: #fff;
+}
+
+.progress-titles {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.progress-container .title {
+  position: absolute;
+  width: 300px;
+  text-align: center;
+  line-height: 24px;
+}
+
+.progress-container .title p {
+  font-size: 14px;
+}
