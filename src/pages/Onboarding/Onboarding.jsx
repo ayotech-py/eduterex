@@ -1,17 +1,31 @@
 import React, { useState } from "react";
 import "./Onboarding.css";
+import { FaCheck } from "react-icons/fa6";
+import { MdOutlineSchool } from "react-icons/md";
+import { HiOutlineLocationMarker } from "react-icons/hi";
+import {
+  FiMap,
+  FiMail,
+  FiPhone,
+  FiUser,
+  FiLock,
+  FiCheck,
+  FiX,
+} from "react-icons/fi";
+import nigeriaStates from "../../utils/nigeria-state-and-lgas.json"; // Import JSON file
+import { motion, AnimatePresence } from "framer-motion";
 
-const SchoolProfile = () => {
+const SchoolProfile = ({ onNext }) => {
   const [formData, setFormData] = useState({
     schoolName: "",
     address: "",
-    stateCity: "",
+    state: "",
+    lga: "",
     contactEmail: "",
     contactPhone: "",
     schoolLogo: null,
-    academicYearStart: "",
-    academicYearEnd: "",
   });
+  const [previewImage, setPreviewImage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -21,103 +35,304 @@ const SchoolProfile = () => {
     });
   };
 
+  const [location, setLocation] = useState({
+    selectedState: "",
+    selectedLGA: "",
+  });
+
+  const handleStateChange = (e) => {
+    setLocation({
+      ...location,
+      selectedState: e.target.value,
+      selectedLGA: "", // Reset LGA when state changes
+    });
+  };
+
+  const handleLGAChange = (e) => {
+    setLocation({
+      ...location,
+      selectedLGA: e.target.value,
+    });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        setPreviewImage(reader.result);
+        setFormData((prevData) => ({
+          ...prevData,
+          image: e.target.result,
+        }));
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
-    <section>
-      <div>
-        <label>School Name:</label>
+    <section className="signup-form">
+      <div className="onboarding-title">
+        <h3>Set Up Your School Profile</h3>
+        <p>
+          Begin by providing essential details about your school to help us
+          tailor your experience.
+        </p>
+      </div>
+      <div className="image-container">
+        <label htmlFor="image">Upload your school logo</label>
+        {previewImage && (
+          <img src={previewImage} alt="Preview" className="image-preview" />
+        )}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="file-input"
+        />
+      </div>
+      <div className="input-form-container">
         <input
           type="text"
           name="schoolName"
           value={formData.schoolName}
           onChange={handleChange}
+          placeholder="School Name"
         />
+        <div className="form-icons">
+          <MdOutlineSchool className="icons" />
+        </div>
       </div>
-      <div>
-        <label>Address:</label>
+      <div className="input-form-container">
         <input
           type="text"
           name="address"
           value={formData.address}
           onChange={handleChange}
+          placeholder="Address"
         />
+        <div className="form-icons">
+          <HiOutlineLocationMarker className="icons" />
+        </div>
       </div>
-      <div>
-        <label>State/City:</label>
-        <input
-          type="text"
-          name="stateCity"
-          value={formData.stateCity}
-          onChange={handleChange}
-        />
+      <div className="form-flex">
+        <div className="input-form-container" style={{ width: "45%" }}>
+          <select
+            name="state"
+            value={location.selectedState}
+            onChange={handleStateChange}
+          >
+            <option value="">Select State</option>
+            {nigeriaStates.map((state) => (
+              <option key={state.alias} value={state.state}>
+                {state.state}
+              </option>
+            ))}
+          </select>
+          <div className="form-icons">
+            <FiMap className="icons" />
+          </div>
+        </div>
+
+        {/* LGA Dropdown */}
+        <div className="input-form-container" style={{ width: "45%" }}>
+          <select
+            name="lga"
+            value={location.selectedLGA}
+            onChange={handleLGAChange}
+          >
+            <option value="">Select LGA</option>
+            {nigeriaStates
+              .find((state) => state.state === location.selectedState)
+              ?.lgas.map((lga) => (
+                <option key={lga} value={lga}>
+                  {lga}
+                </option>
+              ))}
+          </select>
+          <div className="form-icons">
+            <FiMap className="icons" />
+          </div>
+        </div>
       </div>
-      <div>
-        <label>Contact Email:</label>
-        <input
-          type="email"
-          name="contactEmail"
-          value={formData.contactEmail}
-          onChange={handleChange}
-        />
+      <div className="form-flex">
+        <div className="input-form-container" style={{ width: "45%" }}>
+          <input
+            type="email"
+            name="contactEmail"
+            value={formData.contactEmail}
+            onChange={handleChange}
+            placeholder="Contact Email"
+          />
+          <div className="form-icons">
+            <FiMail className="icons" />
+          </div>
+        </div>
+        <div className="input-form-container" style={{ width: "45%" }}>
+          <input
+            type="tel"
+            name="contactPhone"
+            value={formData.contactPhone}
+            onChange={handleChange}
+            placeholder="Contact Phone Number"
+          />
+          <div className="form-icons">
+            <FiPhone className="icons" />
+          </div>
+        </div>
       </div>
-      <div>
-        <label>Contact Phone Number:</label>
-        <input
-          type="tel"
-          name="contactPhone"
-          value={formData.contactPhone}
-          onChange={handleChange}
-        />
+      <div className="btn-container">
+        <button onClick={onNext} className="btn">
+          Next
+        </button>
       </div>
-      <div>
-        <label>School Logo Upload (Optional):</label>
-        <input type="file" name="schoolLogo" onChange={handleChange} />
-      </div>
-      <div>
-        <label>Academic Year Start Date:</label>
-        <input
-          type="date"
-          name="academicYearStart"
-          value={formData.academicYearStart}
-          onChange={handleChange}
-        />
-      </div>
-      <div>
-        <label>Academic Year End Date:</label>
-        <input
-          type="date"
-          name="academicYearEnd"
-          value={formData.academicYearEnd}
-          onChange={handleChange}
-        />
-      </div>
-      <button type="submit">Submit</button>
     </section>
   );
 };
 
-const ProgressIndicator = () => {
+const AdminForm = ({ onNext }) => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  return (
+    <section className="signup-form">
+      <div className="onboarding-title">
+        <h3>Admin Registration</h3>
+        <p>
+          Provide the necessary details to create your admin profile. This
+          ensures secure access and effective management of your school's
+          dashboard.
+        </p>
+      </div>
+      <div className="input-form-container">
+        <input
+          type="text"
+          name="fullName"
+          value={formData.fullName}
+          onChange={handleChange}
+          placeholder="Full Name"
+        />
+        <div className="form-icons">
+          <FiUser className="icons" />
+        </div>
+      </div>
+
+      {/* Email Address */}
+      <div className="input-form-container">
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="Email Address"
+        />
+        <div className="form-icons">
+          <FiMail className="icons" />
+        </div>
+      </div>
+
+      {/* Phone Number */}
+      <div className="input-form-container">
+        <input
+          type="tel"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          placeholder="Phone Number"
+        />
+        <div className="form-icons">
+          <FiPhone className="icons" />
+        </div>
+      </div>
+
+      {/* Password */}
+      <div className="input-form-container">
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Create Password"
+        />
+        <div className="form-icons">
+          <FiLock className="icons" />
+        </div>
+      </div>
+
+      {/* Confirm Password */}
+      <div className="input-form-container">
+        <input
+          type="password"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          placeholder="Confirm Password"
+        />
+        <div className="form-icons">
+          <FiLock className="icons" />
+        </div>
+      </div>
+
+      {/* Submit Button */}
+      <div className="btn-container">
+        <button onClick={onNext} className="btn">
+          Next
+        </button>
+      </div>
+    </section>
+  );
+};
+
+const ProgressIndicator = ({ currentStep }) => {
+  const IconUse = ({ step }) => {
+    if (step === currentStep) {
+      return (
+        <div className="icon-container">
+          <div className="icon-circle"></div>
+        </div>
+      );
+    } else if (step < currentStep) {
+      return (
+        <div className="icon-container">
+          <FaCheck className="icon-checkmark" />
+        </div>
+      );
+    } else {
+      return (
+        <div className="icon-container-inactive">
+          <div className="icon-circle"></div>
+        </div>
+      );
+    }
+  };
   return (
     <div className="progress-container">
       <div className="progress-indicator">
-        <div className="icon-container">
-          <div className="icon-circle"></div>
-        </div>
+        <IconUse step={1} />
         <div className="x-line"></div>
-        <div className="icon-container">
-          <div className="icon-circle"></div>
-        </div>
+        <IconUse step={2} />
         <div className="x-line"></div>
-        <div className="icon-container">
-          <div className="icon-circle"></div>
-        </div>
+        <IconUse step={3} />
         <div className="x-line"></div>
-        <div className="icon-container">
-          <div className="icon-circle"></div>
-        </div>
+        <IconUse step={4} />
         <div className="x-line"></div>
-        <div className="icon-container">
-          <div className="icon-circle"></div>
-        </div>
+        <IconUse step={5} />
       </div>
       <div className="title" style={{ left: "calc(15% - 150px)" }}>
         <h4>School Profile Setup</h4>
@@ -128,8 +343,8 @@ const ProgressIndicator = () => {
         <p>Create admin login credentials.</p>
       </div>
       <div className="title" style={{ left: "calc(50.2% - 150px)" }}>
-        <h4>Payment Confirmation</h4>
-        <p>Confirm and complete payment.</p>
+        <h4>Account Plan Setup</h4>
+        <p>Choose a plan that meets your needs.</p>
       </div>
       <div className="title" style={{ left: "calc(67.8% - 150px)" }}>
         <h4>Preferences & Customization</h4>
@@ -143,11 +358,202 @@ const ProgressIndicator = () => {
   );
 };
 
+const PlanCard = () => {
+  const planList = [
+    {
+      planName: "Acess to free wifie",
+      planLevel: 1,
+    },
+    {
+      planName: "Acess to free wifie",
+      planLevel: 1,
+    },
+    {
+      planName: "Acess to free wifie",
+      planLevel: 1,
+    },
+    {
+      planName: "Acess to free wifie",
+      planLevel: 1,
+    },
+    {
+      planName: "Acess to free wifie",
+      planLevel: 1,
+    },
+    {
+      planName: "Acess to free wifie",
+      planLevel: 2,
+    },
+    {
+      planName: "Acess to free wifie",
+      planLevel: 2,
+    },
+    {
+      planName: "Acess to free wifie",
+      planLevel: 2,
+    },
+    {
+      planName: "Acess to free wifie",
+      planLevel: 3,
+    },
+    {
+      planName: "Acess to free wifie",
+      planLevel: 3,
+    },
+  ];
+
+  const UseIcon = ({ planNumber, planItemNumber }) => {
+    if (planNumber >= planItemNumber) {
+      return (
+        <div className="circle-check" style={{ background: "#925fe2" }}>
+          <FiCheck className="checkmark" style={{ color: "#fff" }} />
+        </div>
+      );
+    } else {
+      return (
+        <div className="circle-check" style={{ background: "#fff" }}>
+          <FiX className="checkmark" style={{ color: "#925fe2" }} />
+        </div>
+      );
+    }
+  };
+  return (
+    <div className="plan-container">
+      <div className="onboarding-title">
+        <h3>Choose your plan</h3>
+        <p>Select a plan that works best for your school’s needs</p>
+      </div>
+      <div className="plan-subcontainer">
+        <div className="plan-card" style={{ backgroundColor: "#ffadbc" }}>
+          <h3>Basic</h3>
+          <div className="amount-flex">
+            <h1>N20,000 </h1>
+            <p> / term</p>
+          </div>
+          <div className="btn-container">
+            <button className="btn">Proceed</button>
+          </div>
+          <div className="plan-item-container">
+            {planList.map((plan, index) => (
+              <div className="plan-item" key={index}>
+                <UseIcon planItemNumber={plan.planLevel} planNumber={1} />
+                <p>1-50 Students</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div
+          className="plan-card"
+          style={{ backgroundColor: "#711A75", color: "#fff" }}
+        >
+          <h3>Pro</h3>
+          <div className="amount-flex">
+            <h1>N35,000 </h1>
+            <p> / term</p>
+          </div>
+          <div className="btn-container">
+            <button className="btn">Proceed</button>
+          </div>
+          <div className="plan-item-container">
+            {planList.map((plan, index) => (
+              <div className="plan-item" key={index}>
+                <UseIcon planItemNumber={plan.planLevel} planNumber={2} />
+                <p>1-50 Students</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="plan-card" style={{ backgroundColor: "#F9E2AF" }}>
+          <h3>Enterprise</h3>
+          <div className="amount-flex">
+            <h1>N50,000 </h1>
+            <p> / term</p>
+          </div>
+          <div className="btn-container">
+            <button className="btn">Proceed</button>
+          </div>
+          <div className="plan-item-container">
+            {planList.map((plan, index) => (
+              <div className="plan-item" key={index}>
+                <UseIcon planItemNumber={plan.planLevel} planNumber={3} />
+                <p>1-50 Students</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Onboarding = () => {
+  const [currentForm, setCurrentForm] = useState(1);
+
+  const formVariants = {
+    initial: (direction) => ({
+      x: direction === "next" ? "100%" : "-100%",
+      opacity: 0,
+    }),
+    animate: { x: 0, opacity: 1 },
+    exit: (direction) => ({
+      x: direction === "next" ? "-100%" : "100%",
+      opacity: 0,
+    }),
+  };
+
   return (
     <div className="onboarding-container">
-      <h1>Onboarding</h1>
-      <ProgressIndicator />
+      <div className="omooo">
+        <AnimatePresence custom="next" mode="wait">
+          {currentForm === 1 && (
+            <motion.div
+              key="school"
+              custom="next"
+              variants={formVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={{ duration: 0.5 }}
+              style={{ width: "100%" }}
+            >
+              <SchoolProfile onNext={() => setCurrentForm(2)} />
+            </motion.div>
+          )}
+
+          {currentForm === 2 && (
+            <motion.div
+              key="admin"
+              custom="next"
+              variants={formVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={{ duration: 0.5 }}
+              style={{ width: "100%" }}
+            >
+              <AdminForm onNext={() => setCurrentForm(3)} />
+            </motion.div>
+          )}
+
+          {currentForm === 3 && (
+            <motion.div
+              key="plan"
+              custom="next"
+              variants={formVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={{ duration: 0.5 }}
+              style={{ width: "100%" }}
+            >
+              <PlanCard />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+      <div style={{ marginTop: "1rem", width: "100%" }}>
+        <ProgressIndicator currentStep={currentForm} />
+      </div>
     </div>
   );
 };

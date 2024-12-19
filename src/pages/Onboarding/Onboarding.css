@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: linear-gradient(135deg, #f3e8ff, #d4b8ff, #c8a2ff);
+  background: linear-gradient(135deg, #d4b8ff, #f3e8ff, #925fe2);
   padding-left: 10%;
   padding-right: 10%;
 }
@@ -32,6 +32,16 @@
   height: 35px;
   border-radius: 100%;
   background-color: #925fe2;
+}
+
+.progress-indicator .icon-container-inactive {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  background-color: #f3e8ff;
 }
 
 .progress-indicator .icon-circle {
@@ -63,4 +73,190 @@
 
 .progress-container .title p {
   font-size: 14px;
+}
+
+.progress-container .icon-checkmark {
+  width: 20px;
+  height: 20px;
+  color: #fff;
+}
+
+.signup-form {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-bottom: 50px;
+  justify-content: center;
+  padding-left: 30%;
+  padding-right: 30%;
+}
+
+.signup-form .input-form-container input,
+.signup-form .input-form-container select {
+  background-color: transparent;
+  padding: 10px 5px 10px 5px;
+  border: none;
+  border-bottom: 1px solid #925fe2;
+  width: 100%;
+  padding-left: 30px;
+  color: black;
+  font-size: 16px;
+  flex: 1;
+}
+
+.signup-form .input-form-container input:focus,
+.signup-form .input-form-container select:focus {
+  outline: none;
+}
+
+.signup-form .input-form-container {
+  display: flex;
+  align-items: center;
+}
+
+.signup-form .form-icons {
+  position: absolute;
+}
+
+.signup-form .form-icons .icons {
+  width: 20px;
+  height: 20px;
+  color: gray;
+}
+
+.signup-form .form-flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+.onboarding-title {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: center;
+}
+
+.onboarding-title h3 {
+  font-size: 30px;
+  text-align: center;
+}
+
+.onboarding-title p {
+  font-size: 15px;
+  text-align: center;
+  line-height: 22px;
+}
+
+.image-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-top: 10px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.file-input {
+  padding: 10px;
+  border: none;
+}
+
+.image-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container input {
+  text-align: center;
+  width: 200px;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-container button {
+  background-color: #925fe2;
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  width: 250px;
+  font-size: 16px;
+}
+
+.btn-container button:hover {
+  background-color: #f3e8ff;
+  color: #925fe2;
+}
+
+.omooo {
+  width: 100%;
+  height: 70%;
+}
+
+.plan-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.plan-container .plan-subcontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.plan-container .plan-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 15px;
+  border-radius: 20px;
+}
+
+.plan-container .plan-card .amount-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.plan-container .plan-card .amount-flex h1 {
+  font-size: 35px;
+}
+
+.plan-container .plan-card .circle-check {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plan-container .plan-card .checkmark {
+  font-size: 13px;
+}
+
+.plan-container .plan-card .plan-item-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.plan-container .plan-card .plan-item {
+  width: 100%;
+  display: flex;
+  gap: 10px;
 }
