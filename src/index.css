@@ -12,7 +12,9 @@ h5,
 h6,
 p,
 input,
-button {
+button,
+ul,
+li {
   font-family: "Montserrat", sans-serif;
   margin: 0;
   padding: 0;

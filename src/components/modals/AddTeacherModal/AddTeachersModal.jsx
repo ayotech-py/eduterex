@@ -114,24 +114,29 @@ const AddTeachersModal = ({
         if (isEdit) {
           appendTeacherObject[isEdit - 1] = formData;
           setAppendTeacherObject([...appendTeacherObject]);
-          setEditIndex(null);
+          clearForm();
         } else {
           setAppendTeacherObject((prevData) => [...prevData, formData]);
-          setFormData({
-            profile_image: null,
-            full_name: "",
-            email: "",
-            phone_number: "",
-            gender: "",
-            class: "",
-          });
-          setProfileImage(null);
+          clearForm();
         }
       }
       onClose();
     } else {
       setAlert(true);
     }
+  };
+
+  const clearForm = () => {
+    setFormData({
+      profile_image: null,
+      full_name: "",
+      email: "",
+      phone_number: "",
+      gender: "",
+      class: "",
+    });
+    setEditIndex(null);
+    setProfileImage(null);
   };
   // Return null if the modal is not visible
   if (!isVisible) return null;
@@ -141,16 +146,7 @@ const AddTeachersModal = ({
       className="modal-overlay"
       onClick={() => {
         onClose();
-        setFormData({
-          profile_image: null,
-          full_name: "",
-          email: "",
-          phone_number: "",
-          gender: "",
-          class: "",
-        });
-        setEditIndex(null);
-        setProfileImage(null);
+        clearForm();
       }}
     >
       <div

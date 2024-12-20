@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Onboarding.css";
+import _ from "lodash";
 import { MdOutlineSchool } from "react-icons/md";
 import {
   HiOutlineClipboardList,
@@ -557,7 +558,33 @@ const PlanCard = ({ onNext, setOnboardingForm }) => {
   );
 };
 
-const Preferences = ({ setOnboardingForm }) => {
+const result_images = [
+  {
+    id: "result_1",
+    image: result_1,
+  },
+  {
+    id: "result_2",
+    image: result_2,
+  },
+  {
+    id: "result_3",
+    image: result_3,
+  },
+  {
+    id: "result_4",
+    image: result_4,
+  },
+  {
+    id: "result_5",
+    image: result_5,
+  },
+  {
+    id: "result_6",
+    image: result_6,
+  },
+];
+const Preferences = ({ setOnboardingForm, onNext }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleOpenModal = () => setIsModalVisible(true);
@@ -565,37 +592,14 @@ const Preferences = ({ setOnboardingForm }) => {
   const [currentSetting, setCurrentSetting] = useState(1);
   const [appendTeacherObject, setAppendTeacherObject] = useState([]);
 
-  const result_images = [
-    {
-      id: "result_1",
-      image: result_1,
-    },
-    {
-      id: "result_2",
-      image: result_2,
-    },
-    {
-      id: "result_3",
-      image: result_3,
-    },
-    {
-      id: "result_4",
-      image: result_4,
-    },
-    {
-      id: "result_5",
-      image: result_5,
-    },
-    {
-      id: "result_6",
-      image: result_6,
-    },
-  ];
-
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const handleSelect = (image) => {
+  const handleSelectResult = (image) => {
     setSelectedImage(image.image);
+    setFormData((prevData) => ({
+      ...prevData,
+      result_design_id: image.id,
+    }));
   };
 
   const [formData, setFormData] = useState({
@@ -614,7 +618,6 @@ const Preferences = ({ setOnboardingForm }) => {
   const [editIndex, setEditIndex] = useState(null);
 
   const handleEdit = (index) => {
-    console.log("Edit index", index);
     setEditIndex(index);
     setIsModalVisible(true);
   };
@@ -625,6 +628,28 @@ const Preferences = ({ setOnboardingForm }) => {
     );
     setAppendTeacherObject(newTeacherList);
     setEditIndex(null);
+  };
+
+  const handleSubject = useCallback(
+    _.debounce((subjectObject) => {
+      setFormData((prevData) => ({
+        ...prevData,
+        subject_to_class: subjectObject,
+      }));
+    }, 200),
+    [],
+  );
+
+  const handleNext = () => {
+    if (currentSetting < 3) {
+      setCurrentSetting(currentSetting + 1);
+    } else {
+      setOnboardingForm((prevData) => ({
+        ...prevData,
+        academicProfile: formData,
+      }));
+      onNext();
+    }
   };
 
   return (
@@ -739,7 +764,7 @@ const Preferences = ({ setOnboardingForm }) => {
               </p>
             </div>
             <div>
-              <SubjectDropdown />
+              <SubjectDropdown handleSubject={handleSubject} />
             </div>
           </div>
         )}
@@ -751,7 +776,7 @@ const Preferences = ({ setOnboardingForm }) => {
               <p>Choose a result design that suits your taste format.</p>
             </div>
             <div>
-              <div className="image-selector">
+              <div className="image-selector overflow">
                 {result_images.map((image, index) => (
                   <label key={index} className="image-option">
                     <input
@@ -759,7 +784,7 @@ const Preferences = ({ setOnboardingForm }) => {
                       name="image"
                       value={image.image}
                       checked={selectedImage === image.image}
-                      onChange={() => handleSelect(image)}
+                      onChange={() => handleSelectResult(image)}
                     />
                     <img
                       src={image.image}
@@ -776,10 +801,7 @@ const Preferences = ({ setOnboardingForm }) => {
         )}
       </div>
       <div className="btn-container">
-        <button
-          onClick={() => setCurrentSetting(currentSetting + 1)}
-          className="btn"
-        >
+        <button onClick={handleNext} className="btn">
           Next
         </button>
       </div>
@@ -787,8 +809,173 @@ const Preferences = ({ setOnboardingForm }) => {
   );
 };
 
+const ConfirmationPage = ({ onboardingForm }) => {
+  useEffect(() => {
+    console.log("Onboarding", onboardingForm);
+  }, []);
+
+  function getImageById(id) {
+    const result = result_images.find((item) => item.id === id);
+    return result ? result.image : null;
+  }
+  return (
+    <div className="confirmation-container">
+      <div className="onboarding-title">
+        <h3>Confirmation & Completion</h3>
+        <p>
+          Please confirm all your entries before submiting. Your school
+          dashboard link will be sent to both the admin and the school's email
+          address.
+        </p>
+      </div>
+      <div className="confirmation-grid overflow">
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          <div className="confirmation-item">
+            <h3>School Profile</h3>
+            <div className="confirmation-details">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <div className="display-image">
+                  <img
+                    src={onboardingForm.schoolProfile.school_logo}
+                    alt=""
+                    srcset=""
+                  />
+                </div>
+              </div>
+              <div className="profile-detail-list">
+                <h4>School Name: </h4>
+                <p>{onboardingForm.schoolProfile.school_name} </p>
+              </div>
+              <div className="profile-detail-list">
+                <h4>Address: </h4>
+                <p>{onboardingForm.schoolProfile.address} </p>
+              </div>
+              <div className="profile-detail-list">
+                <h4>State: </h4>
+                <p>{onboardingForm.schoolProfile.state} </p>
+              </div>
+              <div className="profile-detail-list">
+                <h4>LGA: </h4>
+                <p>{onboardingForm.schoolProfile.lga} </p>
+              </div>
+              <div className="profile-detail-list">
+                <h4>Email: </h4>
+                <p>{onboardingForm.schoolProfile.contact_email} </p>
+              </div>
+              <div className="profile-detail-list">
+                <h4>Phone: </h4>
+                <p>{onboardingForm.schoolProfile.contact_phone} </p>
+              </div>
+            </div>
+          </div>
+          <div className="confirmation-item">
+            <h3>Admin Profile</h3>
+            <div className="confirmation-details">
+              <div className="profile-detail-list">
+                <h4>Full Name: </h4>
+                <p>{onboardingForm.adminProfile.full_name} </p>
+              </div>
+              <div className="profile-detail-list">
+                <h4>Email: </h4>
+                <p>{onboardingForm.adminProfile.email} </p>
+              </div>
+              <div className="profile-detail-list">
+                <h4>Phone: </h4>
+                <p>{onboardingForm.adminProfile.phone} </p>
+              </div>
+            </div>
+          </div>
+          <div className="confirmation-item">
+            <h3>Plan Profile</h3>
+            <div className="confirmation-details">
+              <div className="profile-detail-list">
+                <h4>Plan: </h4>
+                <p>{onboardingForm.planProfile.plan} Plan</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="confirmation-item">
+          <h3>Academic Profile</h3>
+          <div className="confirmation-details">
+            <div className="teacher_class">
+              <h4>Teachers to Class</h4>
+              {onboardingForm.academicProfile.teacher_to_class.map(
+                (obj, index) => (
+                  <div className="profile-list" key={index}>
+                    <p>{index + 1}.</p>
+                    <p>{obj.full_name}</p>
+                    <p>{obj.email}</p>
+                    <p>{obj.class}</p>
+                  </div>
+                ),
+              )}
+            </div>
+            <h4>Nursery Classes Subjects</h4>
+            <ul>
+              {onboardingForm.academicProfile.subject_to_class.Nursery.map(
+                (obj, index) => (
+                  <li key={index}>{obj}</li>
+                ),
+              )}
+            </ul>
+            <h4>Primary Classes Subjects</h4>
+            <ul>
+              {onboardingForm.academicProfile.subject_to_class.Primary.map(
+                (obj, index) => (
+                  <li key={index}>{obj}</li>
+                ),
+              )}
+            </ul>
+            <h4>JSS Classes Subjects</h4>
+            <ul>
+              {onboardingForm.academicProfile.subject_to_class.JSS.map(
+                (obj, index) => (
+                  <li key={index}>{obj}</li>
+                ),
+              )}
+            </ul>
+            <h4>SSS Classes Subjects</h4>
+            <ul>
+              {onboardingForm.academicProfile.subject_to_class.SSS.map(
+                (obj, index) => (
+                  <li key={index}>{obj}</li>
+                ),
+              )}
+            </ul>
+            <h4>Result Design</h4>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <div className="display-image">
+                <img
+                  src={getImageById(
+                    onboardingForm.academicProfile.result_design_id,
+                  )}
+                  alt=""
+                  srcset=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Onboarding = () => {
-  const [currentForm, setCurrentForm] = useState(4);
+  const [currentForm, setCurrentForm] = useState(1);
 
   const formVariants = {
     initial: (direction) => ({
@@ -878,7 +1065,25 @@ const Onboarding = () => {
               transition={{ duration: 0.5 }}
               style={{ width: "100%" }}
             >
-              <Preferences />
+              <Preferences
+                setOnboardingForm={setOnboardingForm}
+                onNext={() => setCurrentForm(5)}
+              />
+            </motion.div>
+          )}
+
+          {currentForm === 5 && (
+            <motion.div
+              key="confirmation"
+              custom="next"
+              variants={formVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={{ duration: 0.5 }}
+              style={{ width: "100%" }}
+            >
+              <ConfirmationPage onboardingForm={onboardingForm} />
             </motion.div>
           )}
         </AnimatePresence>

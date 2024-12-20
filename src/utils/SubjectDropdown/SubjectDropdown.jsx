@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./SubjectDropdown.css";
 import { FiChevronDown, FiChevronRight, FiChevronsRight } from "react-icons/fi";
 
@@ -17,7 +17,8 @@ const subjectsData = {
     "Basic Science & Technology",
     "Social Habit",
     "Civic & Security Education",
-    "C.R.S/I.R.S",
+    "C.R.S",
+    "I.R.S",
     "Social Studies",
     "Home Economics",
     "Handwriting",
@@ -36,7 +37,8 @@ const subjectsData = {
     "Quantitative Reasoning",
     "Civic & Security Education",
     "Verbal Reasoning",
-    "C.R.S/I.R.S",
+    "C.R.S",
+    "I.R.S",
     "Social Studies",
     "Pre-vocational",
     "Home Economics",
@@ -58,7 +60,8 @@ const subjectsData = {
     "Basic Technology",
     "Civic & Security Education",
     "Pre-vocational",
-    "C.R.S/I.R.S",
+    "C.R.S",
+    "I.R.S",
     "Social Studies",
     "Business Studies",
     "Arabic Language",
@@ -85,13 +88,14 @@ const subjectsData = {
     "Current Affairs",
     "Further Mathematics",
     "Computer Science & Practical",
-    "C.R.S/I.R.S",
+    "C.R.S",
+    "I.R.S",
     "Arabic Language",
     "Hausa Language",
   ],
 };
 
-const SubjectDropdown = () => {
+const SubjectDropdown = ({ handleSubject }) => {
   const [selectedSubjects, setSelectedSubjects] = useState({
     Nursery: [],
     Primary: [],
@@ -117,7 +121,11 @@ const SubjectDropdown = () => {
       const updatedSubjects = prev[level].includes(subject)
         ? prev[level].filter((item) => item !== subject)
         : [...prev[level], subject];
-      return { ...prev, [level]: updatedSubjects };
+      const newState = { ...prev, [level]: updatedSubjects };
+
+      handleSubject(newState);
+
+      return newState;
     });
   };
 
@@ -134,7 +142,7 @@ const SubjectDropdown = () => {
             <button>{level} Subjects</button>
           </div>
           {isOpen[level] && (
-            <div className="dropdown-menu">
+            <div className="dropdown-menu overflow">
               {subjectsData[level].map((subject) => (
                 <label key={subject} className="checkbox-label">
                   <input
