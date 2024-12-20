@@ -4,10 +4,47 @@ import CustomTextInput from "../../CustomTextInput/CustomTextInput";
 import { FiUser, FiMail, FiPhone, FiUserPlus } from "react-icons/fi";
 import CustomSelectionInput from "../../CustomSelectionInput/CustomSelectionInput";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
-import { MdSchool } from "react-icons/md";
+import { AlertBadge } from "../../AlertBadge";
+import { isFormValid } from "../../../utils/OnboardingUtils/FormChecker";
+import { doesObjectExist } from "../../../utils/OnboardingUtils/ObjectChecker";
 
-const AddTeachersModal = ({ isVisible, onClose }) => {
-  const [introImage, setIntroImage] = useState(null);
+const AddTeachersModal = ({
+  isVisible,
+  onClose,
+  setAppendTeacherObject,
+  appendTeacherObject,
+  isEdit,
+}) => {
+  const [profileImage, setProfileImage] = useState(null);
+  const [formData, setFormData] = useState({
+    profile_image: null,
+    full_name: "",
+    email: "",
+    phone_number: "",
+    gender: "",
+    class: "",
+  });
+
+  useEffect(() => {
+    if (isVisible) {
+      setFormData({
+        profile_image: isEdit
+          ? appendTeacherObject[isEdit - 1].profile_image
+          : null,
+        full_name: isEdit ? appendTeacherObject[isEdit - 1].full_name : "",
+        email: isEdit ? appendTeacherObject[isEdit - 1].email : "",
+        phone_number: isEdit
+          ? appendTeacherObject[isEdit - 1].phone_number
+          : "",
+        gender: isEdit ? appendTeacherObject[isEdit - 1].gender : "",
+        class: isEdit ? appendTeacherObject[isEdit - 1].class : "",
+      });
+      setProfileImage(appendTeacherObject[isEdit - 1].profile_image);
+      setProfileImage(
+        isEdit ? appendTeacherObject[isEdit - 1].profile_image : null,
+      );
+    }
+  }, [isVisible, isEdit, appendTeacherObject]);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -19,7 +56,11 @@ const AddTeachersModal = ({ isVisible, onClose }) => {
       if (file) {
         const reader = new FileReader();
         reader.onloadend = () => {
-          setIntroImage(reader.result); // Set the uploaded image
+          setProfileImage(reader.result); // Set the uploaded image
+          setFormData({
+            ...formData,
+            profile_image: reader.result,
+          });
         };
         reader.readAsDataURL(file);
       }
@@ -30,10 +71,15 @@ const AddTeachersModal = ({ isVisible, onClose }) => {
     return () => {
       fileInput.removeEventListener("change", handleFileChange); // Cleanup event listener
     };
-  }, [isVisible]);
+  }, [isVisible, formData]);
 
-  // Return null if the modal is not visible
-  if (!isVisible) return null;
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData({
+      ...formData,
+      [name]: files ? files[0] : value,
+    });
+  };
 
   const classList = [
     "Nursery 1",
@@ -52,6 +98,40 @@ const AddTeachersModal = ({ isVisible, onClose }) => {
     "SSS 2",
     "SSS 3",
   ];
+
+  const [alert, setAlert] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleAdd = () => {
+    setAlert(false);
+    if (isFormValid(formData, setMessage)) {
+      if (doesObjectExist(appendTeacherObject, formData)) {
+        setMessage("Teacher with this information already exists.");
+        setAlert(true);
+        return;
+      } else {
+        if (isEdit) {
+          appendTeacherObject[isEdit - 1] = formData;
+          setAppendTeacherObject([...appendTeacherObject]);
+        } else {
+          setAppendTeacherObject((prevData) => [...prevData, formData]);
+          setFormData({
+            profile_image: null,
+            full_name: "",
+            email: "",
+            phone_number: "",
+            gender: "",
+            class: "",
+          });
+        }
+      }
+      onClose();
+    } else {
+      setAlert(true);
+    }
+  };
+  // Return null if the modal is not visible
+  if (!isVisible) return null;
 
   return (
     <div className="modal-overlay" onClick={onClose}>
@@ -72,43 +152,59 @@ const AddTeachersModal = ({ isVisible, onClose }) => {
               accept="image/*"
             />
             <label htmlFor="fileInput" id="imageBox">
-              <span className={introImage ? "hid-image" : "show-image"}>
+              <span className={profileImage ? "hid-image" : "show-image"}>
                 Click to upload image
               </span>
-              {introImage && (
+              {profileImage && (
                 <img
                   className="show-image"
                   id="uploadedImage"
-                  src={introImage}
+                  src={profileImage}
                   alt="Uploaded"
                 />
               )}
             </label>
           </div>
           <CustomTextInput
-            name={"Full Name"}
+            name={"full_name"}
+            placeholder={"Full Name"}
+            value={formData.full_name}
+            handleChange={handleChange}
             icon={<FiUser className="icons" />}
           />
           <CustomTextInput
-            name={"Email Address"}
+            name={"email"}
+            placeholder={"Email Address"}
+            value={formData.email}
+            handleChange={handleChange}
             icon={<FiMail className="icons" />}
           />
           <CustomTextInput
-            name={"Phone Number"}
+            placeholder={"Phone Number"}
+            name={"phone_number"}
+            value={formData.phone_number}
+            handleChange={handleChange}
             icon={<FiPhone className="icons" />}
           />
           <CustomSelectionInput
-            name={"Gender"}
+            placeholder={"Gender"}
+            name={"gender"}
+            value={formData.gender}
+            handleChange={handleChange}
             data={["Male", "Female"]}
             icon={<FiUserPlus className="icons" />}
           />
           <CustomSelectionInput
-            name={"Class"}
+            placeholder={"Class"}
+            name={"class"}
+            value={formData.class}
+            handleChange={handleChange}
             data={classList}
             icon={<AiOutlineUsergroupAdd className="icons" />}
           />
         </div>
-        <button onClick={onClose}>Add</button>
+        {alert && <AlertBadge message={message} />}
+        <button onClick={handleAdd}>{isEdit ? "Update" : "Add"}</button>
       </div>
     </div>
   );

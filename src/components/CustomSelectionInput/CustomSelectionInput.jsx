@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 
-const CustomSelectionInput = ({ icon, data, name }) => {
-  const [selection, setSelection] = useState("");
-
+const CustomSelectionInput = ({
+  icon,
+  data,
+  name,
+  handleChange,
+  value,
+  placeholder,
+}) => {
   const handleStateChange = (e) => {
-    setSelection(e.target.value);
+    handleChange(e);
   };
 
   return (
-    <div className="input-form-container">
-      <select name={name} value={selection} onChange={handleStateChange}>
+    <div className="custom-input-form-container">
+      <select name={name} value={value} onChange={handleStateChange}>
         <option value="" disabled>
-          {name}
+          {placeholder}
         </option>
         {data.map((obj) => (
           <option key={obj} value={obj}>

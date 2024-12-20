@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Onboarding.css";
-import { FaCheck } from "react-icons/fa6";
 import { MdOutlineSchool } from "react-icons/md";
-import { HiOutlineLocationMarker } from "react-icons/hi";
+import {
+  HiOutlineClipboardList,
+  HiOutlineLocationMarker,
+} from "react-icons/hi";
 import {
   FiMap,
   FiMail,
@@ -16,7 +18,6 @@ import nigeriaStates from "../../utils/nigeria-state-and-lgas.json"; // Import J
 import { motion, AnimatePresence } from "framer-motion";
 import { UseProgressIcon } from "../../components/UseProgressIcon";
 import AddTeachersModal from "../../components/modals/AddTeacherModal/AddTeachersModal";
-import { HiOutlineClipboardList } from "react-icons/hi";
 import ListItem from "../../components/ListItem/ListItem";
 import SubjectDropdown from "../../utils/SubjectDropdown/SubjectDropdown";
 import result_1 from "../../images/result_template/result_1.jpg";
@@ -25,18 +26,19 @@ import result_3 from "../../images/result_template/result_3.jpg";
 import result_4 from "../../images/result_template/result_4.jpg";
 import result_5 from "../../images/result_template/result_5.jpg";
 import result_6 from "../../images/result_template/result_6.jpg";
+import { isFormValid } from "../../utils/OnboardingUtils/FormChecker";
+import { AlertBadge } from "../../components/AlertBadge";
 
-const SchoolProfile = ({ onNext }) => {
+const SchoolProfile = ({ onNext, setOnboardingForm }) => {
   const [formData, setFormData] = useState({
-    schoolName: "",
+    school_name: "",
     address: "",
     state: "",
     lga: "",
-    contactEmail: "",
-    contactPhone: "",
-    schoolLogo: null,
+    contact_email: "",
+    contact_phone: "",
+    school_logo: null,
   });
-  const [previewImage, setPreviewImage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -52,10 +54,16 @@ const SchoolProfile = ({ onNext }) => {
   });
 
   const handleStateChange = (e) => {
+    console.log("selected state", e.target.value);
     setLocation({
       ...location,
       selectedState: e.target.value,
       selectedLGA: "", // Reset LGA when state changes
+    });
+    setFormData({
+      ...formData,
+      state: e.target.value,
+      lga: "",
     });
   };
 
@@ -64,23 +72,52 @@ const SchoolProfile = ({ onNext }) => {
       ...location,
       selectedLGA: e.target.value,
     });
+    setFormData({
+      ...formData,
+      lga: e.target.value,
+    });
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  const [logoImage, setLogoImage] = useState(null);
 
-    if (file) {
-      const reader = new FileReader();
+  useEffect(() => {
+    const fileInput = document.getElementById("fileInput");
 
-      reader.onload = function (e) {
-        setPreviewImage(reader.result);
-        setFormData((prevData) => ({
-          ...prevData,
-          image: e.target.result,
-        }));
-      };
+    const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setLogoImage(reader.result);
+          setFormData((prevData) => ({
+            ...prevData,
+            school_logo: reader.result,
+          }));
+        };
+        reader.readAsDataURL(file);
+      }
+    };
 
-      reader.readAsDataURL(file);
+    fileInput.addEventListener("change", handleFileChange);
+
+    return () => {
+      fileInput.removeEventListener("change", handleFileChange); // Cleanup event listener
+    };
+  }, []);
+
+  const [alert, setAlert] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleNext = () => {
+    setAlert(false);
+    if (isFormValid(formData, setMessage)) {
+      setOnboardingForm((prevData) => ({
+        ...prevData,
+        schoolProfile: formData,
+      }));
+      onNext();
+    } else {
+      setAlert(true);
     }
   };
 
@@ -93,23 +130,35 @@ const SchoolProfile = ({ onNext }) => {
           tailor your experience.
         </p>
       </div>
-      <div className="image-container">
-        <label htmlFor="image">Upload your school logo</label>
-        {previewImage && (
-          <img src={previewImage} alt="Preview" className="image-preview" />
-        )}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="file-input"
-        />
+      {alert && <AlertBadge message={message} />}
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div className="image-upload">
+          <input
+            type="file"
+            id="fileInput"
+            className="hidden"
+            accept="image/*"
+          />
+          <label htmlFor="fileInput" id="imageBox">
+            <span className={logoImage ? "hid-image" : "show-image"}>
+              Click to upload logo image
+            </span>
+            {logoImage && (
+              <img
+                className="show-image"
+                id="uploadedImage"
+                src={logoImage}
+                alt="Uploaded"
+              />
+            )}
+          </label>
+        </div>
       </div>
       <div className="input-form-container">
         <input
           type="text"
-          name="schoolName"
-          value={formData.schoolName}
+          name="school_name"
+          value={formData.school_name}
           onChange={handleChange}
           placeholder="School Name"
         />
@@ -173,8 +222,8 @@ const SchoolProfile = ({ onNext }) => {
         <div className="input-form-container" style={{ width: "45%" }}>
           <input
             type="email"
-            name="contactEmail"
-            value={formData.contactEmail}
+            name="contact_email"
+            value={formData.contact_email}
             onChange={handleChange}
             placeholder="Contact Email"
           />
@@ -185,8 +234,8 @@ const SchoolProfile = ({ onNext }) => {
         <div className="input-form-container" style={{ width: "45%" }}>
           <input
             type="tel"
-            name="contactPhone"
-            value={formData.contactPhone}
+            name="contact_phone"
+            value={formData.contact_phone}
             onChange={handleChange}
             placeholder="Contact Phone Number"
           />
@@ -196,7 +245,7 @@ const SchoolProfile = ({ onNext }) => {
         </div>
       </div>
       <div className="btn-container">
-        <button onClick={onNext} className="btn">
+        <button onClick={handleNext} className="btn">
           Next
         </button>
       </div>
@@ -204,13 +253,13 @@ const SchoolProfile = ({ onNext }) => {
   );
 };
 
-const AdminForm = ({ onNext }) => {
+const AdminForm = ({ onNext, setOnboardingForm }) => {
   const [formData, setFormData] = useState({
-    fullName: "",
+    full_name: "",
     email: "",
     phone: "",
     password: "",
-    confirmPassword: "",
+    confirm_password: "",
   });
 
   const handleChange = (e) => {
@@ -219,6 +268,22 @@ const AdminForm = ({ onNext }) => {
       ...formData,
       [name]: value,
     });
+  };
+
+  const [alert, setAlert] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const handleNext = () => {
+    setAlert(false);
+    if (isFormValid(formData, setMessage)) {
+      setOnboardingForm((prevData) => ({
+        ...prevData,
+        adminProfile: formData,
+      }));
+      onNext();
+    } else {
+      setAlert(true);
+    }
   };
 
   return (
@@ -231,11 +296,12 @@ const AdminForm = ({ onNext }) => {
           dashboard.
         </p>
       </div>
+      {alert && <AlertBadge message={message} />}
       <div className="input-form-container">
         <input
           type="text"
-          name="fullName"
-          value={formData.fullName}
+          name="full_name"
+          value={formData.full_name}
           onChange={handleChange}
           placeholder="Full Name"
         />
@@ -290,8 +356,8 @@ const AdminForm = ({ onNext }) => {
       <div className="input-form-container">
         <input
           type="password"
-          name="confirmPassword"
-          value={formData.confirmPassword}
+          name="confirm_password"
+          value={formData.confirm_password}
           onChange={handleChange}
           placeholder="Confirm Password"
         />
@@ -302,7 +368,7 @@ const AdminForm = ({ onNext }) => {
 
       {/* Submit Button */}
       <div className="btn-container">
-        <button onClick={onNext} className="btn">
+        <button onClick={handleNext} className="btn">
           Next
         </button>
       </div>
@@ -348,7 +414,7 @@ const ProgressIndicator = ({ currentStep }) => {
   );
 };
 
-const PlanCard = ({ onNext }) => {
+const PlanCard = ({ onNext, setOnboardingForm }) => {
   const planList = [
     {
       planName: "Acess to free wifie",
@@ -407,6 +473,15 @@ const PlanCard = ({ onNext }) => {
       );
     }
   };
+
+  const handleNext = (planName) => {
+    setOnboardingForm((prevData) => ({
+      ...prevData,
+      planProfile: { plan: planName },
+    }));
+    onNext();
+  };
+
   return (
     <div className="plan-container">
       <div className="onboarding-title">
@@ -421,7 +496,7 @@ const PlanCard = ({ onNext }) => {
             <p> / term</p>
           </div>
           <div className="btn-container">
-            <button onClick={onNext} className="btn">
+            <button onClick={() => handleNext("Basic")} className="btn">
               Proceed
             </button>
           </div>
@@ -429,7 +504,7 @@ const PlanCard = ({ onNext }) => {
             {planList.map((plan, index) => (
               <div className="plan-item" key={index}>
                 <UseIcon planItemNumber={plan.planLevel} planNumber={1} />
-                <p>1-50 Students</p>
+                <p>{plan.planName}</p>
               </div>
             ))}
           </div>
@@ -444,7 +519,7 @@ const PlanCard = ({ onNext }) => {
             <p> / term</p>
           </div>
           <div className="btn-container">
-            <button onClick={onNext} className="btn">
+            <button onClick={() => handleNext("Pro")} className="btn">
               Proceed
             </button>
           </div>
@@ -452,7 +527,7 @@ const PlanCard = ({ onNext }) => {
             {planList.map((plan, index) => (
               <div className="plan-item" key={index}>
                 <UseIcon planItemNumber={plan.planLevel} planNumber={2} />
-                <p>1-50 Students</p>
+                <p>{plan.planName}</p>
               </div>
             ))}
           </div>
@@ -464,7 +539,7 @@ const PlanCard = ({ onNext }) => {
             <p> / term</p>
           </div>
           <div className="btn-container">
-            <button onClick={onNext} className="btn">
+            <button onClick={() => handleNext("Enterprise")} className="btn">
               Proceed
             </button>
           </div>
@@ -472,7 +547,7 @@ const PlanCard = ({ onNext }) => {
             {planList.map((plan, index) => (
               <div className="plan-item" key={index}>
                 <UseIcon planItemNumber={plan.planLevel} planNumber={3} />
-                <p>1-50 Students</p>
+                <p>{plan.planName}</p>
               </div>
             ))}
           </div>
@@ -482,26 +557,66 @@ const PlanCard = ({ onNext }) => {
   );
 };
 
-const Preferences = () => {
+const Preferences = ({ setOnboardingForm }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleOpenModal = () => setIsModalVisible(true);
   const handleCloseModal = () => setIsModalVisible(false);
   const [currentSetting, setCurrentSetting] = useState(1);
+  const [appendTeacherObject, setAppendTeacherObject] = useState([]);
 
   const result_images = [
-    result_1,
-    result_2,
-    result_3,
-    result_4,
-    result_5,
-    result_6,
+    {
+      id: "result_1",
+      image: result_1,
+    },
+    {
+      id: "result_2",
+      image: result_2,
+    },
+    {
+      id: "result_3",
+      image: result_3,
+    },
+    {
+      id: "result_4",
+      image: result_4,
+    },
+    {
+      id: "result_5",
+      image: result_5,
+    },
+    {
+      id: "result_6",
+      image: result_6,
+    },
   ];
 
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleSelect = (image) => {
-    setSelectedImage(image);
+    setSelectedImage(image.image);
+  };
+
+  const [formData, setFormData] = useState({
+    teacher_to_class: [],
+    subject_to_class: [],
+    result_design_id: "",
+  });
+
+  useEffect(() => {
+    setFormData((prevData) => ({
+      ...prevData,
+      teacher_to_class: appendTeacherObject,
+    }));
+  }, [appendTeacherObject]);
+
+  const [editIndex, setEditIndex] = useState(null);
+
+  const handleEdit = (index) => {
+    console.log("Edit index", index);
+    setEditIndex(index);
+    setIsModalVisible(true);
   };
 
   return (
@@ -559,45 +674,48 @@ const Preferences = () => {
                 management.
               </p>
             </div>
-            {/* <div className="no-record-yet">
-              <HiOutlineClipboardList
-                className="no-record-icon"
-                style={{ transform: "scale(1.2)" }}
-              />
-              <p>No records yet</p>
-              <div className="btn-container">
-                <button onClick={handleOpenModal}>Add record</button>
-              </div>
-            </div> */}
-            <div className="list-parent">
-              <div className="list-container">
-                <ListItem />
-                <ListItem />
-                <ListItem />
-                <ListItem />
-                <ListItem />
-                <ListItem />
-                <ListItem />
-                <ListItem />
-                <ListItem />
-                <ListItem />
-              </div>
-              <div className="preferences-footer">
-                <p>
-                  Teachers who handles more than one classes should be done
-                  after the onboarding process
-                </p>
-                <div className="btn-container">
-                  <button onClick={handleOpenModal} className="btn">
-                    Add
-                  </button>
+            {formData.teacher_to_class.length > 0 ? (
+              <div className="list-parent">
+                <div className="list-container">
+                  {formData.teacher_to_class.map((obj, index) => (
+                    <ListItem
+                      object={obj}
+                      index={index + 1}
+                      handleEdit={handleEdit}
+                    />
+                  ))}
+                </div>
+                <div className="preferences-footer">
+                  <p>
+                    Teachers who handles more than one classes should be done
+                    after the onboarding process
+                  </p>
+                  <div className="btn-container">
+                    <button onClick={handleOpenModal} className="btn">
+                      Add
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <div className="no-record-yet">
+                <HiOutlineClipboardList
+                  className="no-record-icon"
+                  style={{ transform: "scale(1.2)" }}
+                />
+                <p>No records yet</p>
+                <div className="btn-container">
+                  <button onClick={handleOpenModal}>Add record</button>
+                </div>
+              </div>
+            )}
 
             <AddTeachersModal
               isVisible={isModalVisible}
               onClose={handleCloseModal}
+              appendTeacherObject={appendTeacherObject}
+              setAppendTeacherObject={setAppendTeacherObject}
+              isEdit={editIndex}
             />
           </div>
         )}
@@ -629,14 +747,16 @@ const Preferences = () => {
                     <input
                       type="radio"
                       name="image"
-                      value={image}
-                      checked={selectedImage === image}
+                      value={image.image}
+                      checked={selectedImage === image.image}
                       onChange={() => handleSelect(image)}
                     />
                     <img
-                      src={image}
+                      src={image.image}
                       alt={`Option ${index + 1}`}
-                      className={selectedImage === image ? "selected" : ""}
+                      className={
+                        selectedImage === image.image ? "selected" : ""
+                      }
                     />
                   </label>
                 ))}
@@ -658,7 +778,7 @@ const Preferences = () => {
 };
 
 const Onboarding = () => {
-  const [currentForm, setCurrentForm] = useState(1);
+  const [currentForm, setCurrentForm] = useState(4);
 
   const formVariants = {
     initial: (direction) => ({
@@ -671,6 +791,13 @@ const Onboarding = () => {
       opacity: 0,
     }),
   };
+
+  const [onboardingForm, setOnboardingForm] = useState({
+    schoolProfile: {},
+    adminProfile: {},
+    planProfile: {},
+    academicProfile: {},
+  });
 
   return (
     <div className="onboarding-container">
@@ -687,7 +814,10 @@ const Onboarding = () => {
               transition={{ duration: 0.5 }}
               style={{ width: "100%" }}
             >
-              <SchoolProfile onNext={() => setCurrentForm(2)} />
+              <SchoolProfile
+                setOnboardingForm={setOnboardingForm}
+                onNext={() => setCurrentForm(2)}
+              />
             </motion.div>
           )}
 
@@ -702,7 +832,10 @@ const Onboarding = () => {
               transition={{ duration: 0.5 }}
               style={{ width: "100%" }}
             >
-              <AdminForm onNext={() => setCurrentForm(3)} />
+              <AdminForm
+                setOnboardingForm={setOnboardingForm}
+                onNext={() => setCurrentForm(3)}
+              />
             </motion.div>
           )}
 
@@ -717,7 +850,10 @@ const Onboarding = () => {
               transition={{ duration: 0.5 }}
               style={{ width: "100%" }}
             >
-              <PlanCard onNext={() => setCurrentForm(4)} />
+              <PlanCard
+                setOnboardingForm={setOnboardingForm}
+                onNext={() => setCurrentForm(4)}
+              />
             </motion.div>
           )}
 

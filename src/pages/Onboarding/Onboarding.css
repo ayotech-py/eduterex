@@ -63,6 +63,14 @@
   background-color: #fff;
 }
 
+.alert-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: red;
+}
+
 .progress-titles {
   display: flex;
   justify-content: space-between;
@@ -341,6 +349,9 @@
 
 .preferences-container .list-parent {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .preferences-container .preferences-footer {

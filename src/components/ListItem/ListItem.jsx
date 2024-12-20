@@ -2,21 +2,31 @@ import React from "react";
 import "./ListItem.css";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
-const ListItem = () => {
+const ListItem = ({ object, index, handleEdit, handleDelete }) => {
   return (
     <div className="item-list">
       <div className="sn">
-        <p>1</p>
+        <p>{index}</p>
       </div>
       <div className="list-item-name">
-        <p>Gabriel Samuel</p>
+        <p>{object.full_name}</p>
       </div>
       <div className="list-item-class">
-        <p>Nursery 1</p>
+        <p>{object.class}</p>
       </div>
       <div className="list-item-action">
-        <FaEdit className="edit" />
-        <FaTrash className="delete" />
+        <FaEdit
+          onClick={() => {
+            handleEdit(index);
+          }}
+          className="edit"
+        />
+        <FaTrash
+          onClick={() => {
+            handleDelete(index);
+          }}
+          className="delete"
+        />
       </div>
     </div>
   );
