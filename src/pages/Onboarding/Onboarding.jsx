@@ -619,6 +619,14 @@ const Preferences = ({ setOnboardingForm }) => {
     setIsModalVisible(true);
   };
 
+  const handleDelete = (index) => {
+    const newTeacherList = appendTeacherObject.filter(
+      (obj, i) => i !== index - 1,
+    );
+    setAppendTeacherObject(newTeacherList);
+    setEditIndex(null);
+  };
+
   return (
     <div className="preferences-container">
       <div className="onboarding-title">
@@ -682,6 +690,7 @@ const Preferences = ({ setOnboardingForm }) => {
                       object={obj}
                       index={index + 1}
                       handleEdit={handleEdit}
+                      handleDelete={handleDelete}
                     />
                   ))}
                 </div>
@@ -716,6 +725,7 @@ const Preferences = ({ setOnboardingForm }) => {
               appendTeacherObject={appendTeacherObject}
               setAppendTeacherObject={setAppendTeacherObject}
               isEdit={editIndex}
+              setEditIndex={setEditIndex}
             />
           </div>
         )}

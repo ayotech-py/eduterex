@@ -13,6 +13,7 @@ const AddTeachersModal = ({
   onClose,
   setAppendTeacherObject,
   appendTeacherObject,
+  setEditIndex,
   isEdit,
 }) => {
   const [profileImage, setProfileImage] = useState(null);
@@ -26,7 +27,7 @@ const AddTeachersModal = ({
   });
 
   useEffect(() => {
-    if (isVisible) {
+    if (isVisible === true && isEdit) {
       setFormData({
         profile_image: isEdit
           ? appendTeacherObject[isEdit - 1].profile_image
@@ -113,6 +114,7 @@ const AddTeachersModal = ({
         if (isEdit) {
           appendTeacherObject[isEdit - 1] = formData;
           setAppendTeacherObject([...appendTeacherObject]);
+          setEditIndex(null);
         } else {
           setAppendTeacherObject((prevData) => [...prevData, formData]);
           setFormData({
@@ -123,6 +125,7 @@ const AddTeachersModal = ({
             gender: "",
             class: "",
           });
+          setProfileImage(null);
         }
       }
       onClose();
@@ -134,7 +137,22 @@ const AddTeachersModal = ({
   if (!isVisible) return null;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div
+      className="modal-overlay"
+      onClick={() => {
+        onClose();
+        setFormData({
+          profile_image: null,
+          full_name: "",
+          email: "",
+          phone_number: "",
+          gender: "",
+          class: "",
+        });
+        setEditIndex(null);
+        setProfileImage(null);
+      }}
+    >
       <div
         className="modal-content"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
