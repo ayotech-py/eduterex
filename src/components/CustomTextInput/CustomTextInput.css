@@ -1,0 +1,38 @@
+.custom-input-form-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  position: relative;
+  width: 100%;
+}
+
+.custom-input-form-container input,
+.custom-input-form-container select {
+  width: 100%;
+  padding: 10px;
+  padding-left: 40px; /* Adjust padding to make space for the icon */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.custom-input-form-container input:focus,
+.custom-input-form-container select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.custom-input-form-container .form-icons {
+  position: absolute;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-input-form-container .form-icons .icons {
+  font-size: 20px;
+  color: #666;
+}

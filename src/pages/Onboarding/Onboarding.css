@@ -24,7 +24,7 @@
   margin-bottom: 15px;
 }
 
-.progress-indicator .icon-container {
+.icon-container {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,7 +34,7 @@
   background-color: #925fe2;
 }
 
-.progress-indicator .icon-container-inactive {
+.icon-container-inactive {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -44,11 +44,17 @@
   background-color: #f3e8ff;
 }
 
-.progress-indicator .icon-circle {
+.icon-container .icon-circle {
   width: 15px;
   height: 15px;
   border-radius: 100%;
   background-color: #fff;
+}
+
+.icon-container .icon-checkmark {
+  width: 20px;
+  height: 20px;
+  color: #fff;
 }
 
 .progress-indicator .x-line {
@@ -73,12 +79,6 @@
 
 .progress-container .title p {
   font-size: 14px;
-}
-
-.progress-container .icon-checkmark {
-  width: 20px;
-  height: 20px;
-  color: #fff;
 }
 
 .signup-form {
@@ -259,4 +259,174 @@
   width: 100%;
   display: flex;
   gap: 10px;
+}
+
+.preferences-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+.preferences-container .preferences {
+  width: 70%;
+  display: flex;
+  height: 53vh;
+}
+
+.preferences-container .preferences .aside {
+  width: 30%;
+  background-color: #711a75;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  padding: 25px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.preferences-container .preferences .aside h3 {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.preferences-container .preferences .main {
+  width: 70%;
+  background-color: #ffadbc;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.preference-item {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.preferences-container .main .main-preference-headidng {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border-bottom: 1px solid #925fe2;
+  padding-bottom: 10px;
+  height: 10%;
+}
+
+.preferences-container .aside .preference-item p {
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.no-record-yet {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  height: 100%;
+}
+
+.no-record-icon {
+  font-size: 150px;
+}
+
+.preferences-container .list-parent {
+  height: 100%;
+}
+
+.preferences-container .preferences-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  height: 15%;
+}
+
+.preferences-container .preferences-footer p {
+  width: 75%;
+  font-size: 14px;
+}
+
+.preferences-container .preferences-footer .btn-container {
+  width: 20%;
+}
+
+.preferences-container .list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 65%;
+  max-height: max-content;
+  overflow-y: auto;
+}
+
+.preferences-container .list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.preferences-container .list-container::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
+
+.preferences-container .list-container::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+.preferences-container .list-container::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+.image-selector {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.image-option {
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.image-option input {
+  display: none;
+}
+
+.image-option img {
+  width: 150px;
+  height: 170px;
+  border: 2px solid transparent;
+  transition: border 0.3s ease;
+}
+
+.image-option img.selected {
+  border: 2px solid blue;
+  border-radius: 5px;
+}
+
+.selected-message {
+  margin-top: 20px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.selected-message img {
+  width: 100px;
+  height: 100px;
+  margin-top: 10px;
+  border-radius: 5px;
 }

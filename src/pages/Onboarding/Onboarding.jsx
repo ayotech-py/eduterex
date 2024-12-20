@@ -14,6 +14,17 @@ import {
 } from "react-icons/fi";
 import nigeriaStates from "../../utils/nigeria-state-and-lgas.json"; // Import JSON file
 import { motion, AnimatePresence } from "framer-motion";
+import { UseProgressIcon } from "../../components/UseProgressIcon";
+import AddTeachersModal from "../../components/modals/AddTeacherModal/AddTeachersModal";
+import { HiOutlineClipboardList } from "react-icons/hi";
+import ListItem from "../../components/ListItem/ListItem";
+import SubjectDropdown from "../../utils/SubjectDropdown/SubjectDropdown";
+import result_1 from "../../images/result_template/result_1.jpg";
+import result_2 from "../../images/result_template/result_2.jpg";
+import result_3 from "../../images/result_template/result_3.jpg";
+import result_4 from "../../images/result_template/result_4.jpg";
+import result_5 from "../../images/result_template/result_5.jpg";
+import result_6 from "../../images/result_template/result_6.jpg";
 
 const SchoolProfile = ({ onNext }) => {
   const [formData, setFormData] = useState({
@@ -300,39 +311,18 @@ const AdminForm = ({ onNext }) => {
 };
 
 const ProgressIndicator = ({ currentStep }) => {
-  const IconUse = ({ step }) => {
-    if (step === currentStep) {
-      return (
-        <div className="icon-container">
-          <div className="icon-circle"></div>
-        </div>
-      );
-    } else if (step < currentStep) {
-      return (
-        <div className="icon-container">
-          <FaCheck className="icon-checkmark" />
-        </div>
-      );
-    } else {
-      return (
-        <div className="icon-container-inactive">
-          <div className="icon-circle"></div>
-        </div>
-      );
-    }
-  };
   return (
     <div className="progress-container">
       <div className="progress-indicator">
-        <IconUse step={1} />
+        <UseProgressIcon currentStep={currentStep} step={1} />
         <div className="x-line"></div>
-        <IconUse step={2} />
+        <UseProgressIcon currentStep={currentStep} step={2} />
         <div className="x-line"></div>
-        <IconUse step={3} />
+        <UseProgressIcon currentStep={currentStep} step={3} />
         <div className="x-line"></div>
-        <IconUse step={4} />
+        <UseProgressIcon currentStep={currentStep} step={4} />
         <div className="x-line"></div>
-        <IconUse step={5} />
+        <UseProgressIcon currentStep={currentStep} step={5} />
       </div>
       <div className="title" style={{ left: "calc(15% - 150px)" }}>
         <h4>School Profile Setup</h4>
@@ -347,8 +337,8 @@ const ProgressIndicator = ({ currentStep }) => {
         <p>Choose a plan that meets your needs.</p>
       </div>
       <div className="title" style={{ left: "calc(67.8% - 150px)" }}>
-        <h4>Preferences & Customization</h4>
-        <p>Configure settings and enable features.</p>
+        <h4>Academic Setup</h4>
+        <p>Configure Your Academic Setup.</p>
       </div>
       <div className="title" style={{ left: "calc(85% - 150px)" }}>
         <h4>Confirmation & Completion</h4>
@@ -358,7 +348,7 @@ const ProgressIndicator = ({ currentStep }) => {
   );
 };
 
-const PlanCard = () => {
+const PlanCard = ({ onNext }) => {
   const planList = [
     {
       planName: "Acess to free wifie",
@@ -431,7 +421,9 @@ const PlanCard = () => {
             <p> / term</p>
           </div>
           <div className="btn-container">
-            <button className="btn">Proceed</button>
+            <button onClick={onNext} className="btn">
+              Proceed
+            </button>
           </div>
           <div className="plan-item-container">
             {planList.map((plan, index) => (
@@ -452,7 +444,9 @@ const PlanCard = () => {
             <p> / term</p>
           </div>
           <div className="btn-container">
-            <button className="btn">Proceed</button>
+            <button onClick={onNext} className="btn">
+              Proceed
+            </button>
           </div>
           <div className="plan-item-container">
             {planList.map((plan, index) => (
@@ -470,7 +464,9 @@ const PlanCard = () => {
             <p> / term</p>
           </div>
           <div className="btn-container">
-            <button className="btn">Proceed</button>
+            <button onClick={onNext} className="btn">
+              Proceed
+            </button>
           </div>
           <div className="plan-item-container">
             {planList.map((plan, index) => (
@@ -481,6 +477,181 @@ const PlanCard = () => {
             ))}
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const Preferences = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handleOpenModal = () => setIsModalVisible(true);
+  const handleCloseModal = () => setIsModalVisible(false);
+  const [currentSetting, setCurrentSetting] = useState(1);
+
+  const result_images = [
+    result_1,
+    result_2,
+    result_3,
+    result_4,
+    result_5,
+    result_6,
+  ];
+
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleSelect = (image) => {
+    setSelectedImage(image);
+  };
+
+  return (
+    <div className="preferences-container">
+      <div className="onboarding-title">
+        <h3>Configure Your Academic Setup</h3>
+        <p>Streamline your school operations by setting up key preferences. </p>
+      </div>
+      <div className="preferences">
+        <div className="aside">
+          <div className="preference-item">
+            <div style={{ width: "10%" }}>
+              <UseProgressIcon currentStep={currentSetting} step={1} />
+            </div>
+            <div style={{ width: "90%", lineHeight: 1.4 }}>
+              <h3>Assign Teachers to Classes</h3>
+              <p>
+                Match teachers to their respective classes for efficient class
+                management.
+              </p>
+            </div>
+          </div>
+          <div className="preference-item">
+            <div style={{ width: "10%", lineHeight: 1.4 }}>
+              <UseProgressIcon currentStep={currentSetting} step={2} />
+            </div>
+            <div style={{ width: "90%", lineHeight: 1.4 }}>
+              <h3>Assign Subjects to Classes</h3>
+              <p>
+                Allocate subjects to the appropriate classes based on the
+                curriculum.
+              </p>
+            </div>
+          </div>
+
+          <div className="preference-item">
+            <div style={{ width: "10%" }}>
+              <UseProgressIcon currentStep={currentSetting} step={3} />
+            </div>
+            <div style={{ width: "90%", lineHeight: 1.3 }}>
+              <h3>Result Format Preference</h3>
+              <p>
+                Allocate subjects to the appropriate classes based on the
+                curriculum.
+              </p>
+            </div>
+          </div>
+        </div>
+        {currentSetting === 1 && (
+          <div className="main">
+            <div className="main-preference-headidng">
+              <h3>Assign Teachers to Classes</h3>
+              <p>
+                Match teachers to their respective classes for efficient class
+                management.
+              </p>
+            </div>
+            {/* <div className="no-record-yet">
+              <HiOutlineClipboardList
+                className="no-record-icon"
+                style={{ transform: "scale(1.2)" }}
+              />
+              <p>No records yet</p>
+              <div className="btn-container">
+                <button onClick={handleOpenModal}>Add record</button>
+              </div>
+            </div> */}
+            <div className="list-parent">
+              <div className="list-container">
+                <ListItem />
+                <ListItem />
+                <ListItem />
+                <ListItem />
+                <ListItem />
+                <ListItem />
+                <ListItem />
+                <ListItem />
+                <ListItem />
+                <ListItem />
+              </div>
+              <div className="preferences-footer">
+                <p>
+                  Teachers who handles more than one classes should be done
+                  after the onboarding process
+                </p>
+                <div className="btn-container">
+                  <button onClick={handleOpenModal} className="btn">
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <AddTeachersModal
+              isVisible={isModalVisible}
+              onClose={handleCloseModal}
+            />
+          </div>
+        )}
+        {currentSetting === 2 && (
+          <div className="main">
+            <div className="main-preference-headidng">
+              <h3>Assign Subjects to Classes</h3>
+              <p>
+                Allocate subjects to the appropriate classes based on the
+                curriculum.
+              </p>
+            </div>
+            <div>
+              <SubjectDropdown />
+            </div>
+          </div>
+        )}
+
+        {currentSetting === 3 && (
+          <div className="main">
+            <div className="main-preference-headidng">
+              <h3>Result Format Preference</h3>
+              <p>Choose a result design that suits your taste format.</p>
+            </div>
+            <div>
+              <div className="image-selector">
+                {result_images.map((image, index) => (
+                  <label key={index} className="image-option">
+                    <input
+                      type="radio"
+                      name="image"
+                      value={image}
+                      checked={selectedImage === image}
+                      onChange={() => handleSelect(image)}
+                    />
+                    <img
+                      src={image}
+                      alt={`Option ${index + 1}`}
+                      className={selectedImage === image ? "selected" : ""}
+                    />
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="btn-container">
+        <button
+          onClick={() => setCurrentSetting(currentSetting + 1)}
+          className="btn"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
@@ -546,7 +717,22 @@ const Onboarding = () => {
               transition={{ duration: 0.5 }}
               style={{ width: "100%" }}
             >
-              <PlanCard />
+              <PlanCard onNext={() => setCurrentForm(4)} />
+            </motion.div>
+          )}
+
+          {currentForm === 4 && (
+            <motion.div
+              key="preferences"
+              custom="next"
+              variants={formVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={{ duration: 0.5 }}
+              style={{ width: "100%" }}
+            >
+              <Preferences />
             </motion.div>
           )}
         </AnimatePresence>
