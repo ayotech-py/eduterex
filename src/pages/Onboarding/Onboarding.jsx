@@ -291,11 +291,7 @@ const AdminForm = ({ onNext, setOnboardingForm }) => {
     <section className="signup-form">
       <div className="onboarding-title">
         <h3>Admin Registration</h3>
-        <p>
-          Provide the necessary details to create your admin profile. This
-          ensures secure access and effective management of your school's
-          dashboard.
-        </p>
+        <p>Provide the necessary details to create your admin profile.</p>
       </div>
       {alert && <AlertBadge message={message} />}
       <div className="input-form-container">
@@ -702,7 +698,7 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
           <div className="main">
             <div className="main-preference-headidng">
               <h3>Assign Teachers to Classes</h3>
-              <p>
+              <p style={{ textAlign: "center" }}>
                 Match teachers to their respective classes for efficient class
                 management.
               </p>
@@ -758,7 +754,7 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
           <div className="main">
             <div className="main-preference-headidng">
               <h3>Assign Subjects to Classes</h3>
-              <p>
+              <p style={{ textAlign: "center" }}>
                 Allocate subjects to the appropriate classes based on the
                 curriculum.
               </p>
@@ -971,7 +967,7 @@ const ConfirmationPage = ({ onboardingForm }) => {
 };
 
 const Onboarding = () => {
-  const [currentForm, setCurrentForm] = useState(3);
+  const [currentForm, setCurrentForm] = useState(1);
 
   const formVariants = {
     initial: (direction) => ({

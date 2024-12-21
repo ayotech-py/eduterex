@@ -41,12 +41,8 @@
     padding: 10px;
   }
 
-  .item-list p {
-    font-size: 14px;
-  }
-
   .item-list .list-item-name {
-    width: 35%;
+    width: 50%;
   }
 
   .item-list .list-item-class {

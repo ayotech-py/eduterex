@@ -19,3 +19,28 @@ li {
   margin: 0;
   padding: 0;
 }
+
+@media screen and (max-width: 650px) {
+  p,
+  input,
+  label,
+  input,
+  select,
+  button,
+  ul,
+  li {
+    font-size: 14px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  h3 {
+    font-size: 18px;
+  }
+
+  h4 {
+    font-size: 14px;
+  }
+}

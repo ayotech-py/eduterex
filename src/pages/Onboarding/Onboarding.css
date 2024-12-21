@@ -109,7 +109,6 @@
   width: 100%;
   padding-left: 30px;
   color: black;
-  font-size: 16px;
   flex: 1;
 }
 
@@ -510,7 +509,7 @@
 
 .profile-list {
   display: grid;
-  grid-template-columns: 3% 40% 38% 15%;
+  grid-template-columns: 5% 70% 20%;
   justify-content: space-between;
   background-color: #f3e8ff;
   border-radius: 5px;
@@ -534,7 +533,6 @@
 
 .display-image {
   width: 150px;
-  height: 150px;
   object-fit: cover;
 }
 
@@ -544,7 +542,16 @@
   border-radius: 5px;
 }
 
-@media screen and (max-width: 650px) {
+.confirmation-container
+  .confirmation-grid
+  .confirmation-item
+  .confirmation-details
+  ul
+  li {
+  list-style-type: none;
+}
+
+@media screen and (max-width: 900px) {
   .onboarding-container {
     padding-left: 5%;
     padding-right: 5%;
@@ -611,12 +618,6 @@
   .confirmation-container .confirmation-grid .confirmation-item {
     padding: 10px;
     width: calc(100% - 20px);
-  }
-
-  .confirmation-container p,
-  .confirmation-container h4,
-  .confirmation-container li {
-    font-size: 12px;
   }
 
   .confirmation-container
@@ -723,10 +724,45 @@
   }
 
   .confirmation-container h3 {
+    font-weight: 600;
     font-size: 16px;
   }
 
   .profile-list {
     grid-template-columns: 3% 65% 22%;
+  }
+
+  .onboarding-title h3 {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 1450px) {
+  .onboarding-container {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .progress-container .title {
+    display: none;
+  }
+
+  .confirmation-container .confirmation-grid {
+    max-height: 500px;
+  }
+
+  .signup-form {
+    width: 100%;
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+  }
+
+  .onboarding-title {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+
+  .preferences-container .preferences {
+    width: 100%;
   }
 }

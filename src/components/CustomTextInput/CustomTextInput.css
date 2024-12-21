@@ -36,3 +36,10 @@
   font-size: 20px;
   color: #666;
 }
+
+@media screen and (max-width: 650px) {
+  .custom-input-form-container input,
+  .custom-input-form-container select {
+    font-size: 14px;
+  }
+}
