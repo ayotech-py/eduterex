@@ -822,11 +822,7 @@ const ConfirmationPage = ({ onboardingForm }) => {
     <div className="confirmation-container">
       <div className="onboarding-title">
         <h3>Confirmation & Completion</h3>
-        <p>
-          Please confirm all your entries before submiting. Your school
-          dashboard link will be sent to both the admin and the school's email
-          address.
-        </p>
+        <p>Please confirm all your entries before submiting.</p>
       </div>
       <div className="confirmation-grid overflow">
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -911,7 +907,7 @@ const ConfirmationPage = ({ onboardingForm }) => {
                   <div className="profile-list" key={index}>
                     <p>{index + 1}.</p>
                     <p>{obj.full_name}</p>
-                    <p>{obj.email}</p>
+
                     <p>{obj.class}</p>
                   </div>
                 ),
@@ -975,7 +971,7 @@ const ConfirmationPage = ({ onboardingForm }) => {
 };
 
 const Onboarding = () => {
-  const [currentForm, setCurrentForm] = useState(1);
+  const [currentForm, setCurrentForm] = useState(3);
 
   const formVariants = {
     initial: (direction) => ({
@@ -998,7 +994,7 @@ const Onboarding = () => {
 
   return (
     <div className="onboarding-container">
-      <div className="omooo">
+      <div className="animation-container">
         <AnimatePresence custom="next" mode="wait">
           {currentForm === 1 && (
             <motion.div

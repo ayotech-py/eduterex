@@ -87,3 +87,14 @@
 .overflow::-webkit-scrollbar-thumb:hover {
   background-color: #555; /* Darker gray when hovered */
 }
+
+@media screen and (max-width: 650px) {
+  .dropdown-container {
+    font-size: 13px;
+    width: 100%;
+  }
+
+  .dropdown-menu {
+    max-height: 120px;
+  }
+}

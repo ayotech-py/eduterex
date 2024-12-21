@@ -207,7 +207,7 @@
   color: #925fe2;
 }
 
-.omooo {
+.animation-container {
   width: 100%;
   height: 70%;
 }
@@ -542,4 +542,191 @@
   width: 100%;
   height: 100%;
   border-radius: 5px;
+}
+
+@media screen and (max-width: 650px) {
+  .onboarding-container {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .signup-form {
+    width: 100%;
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+  }
+
+  .onboarding-title {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+
+  .preferences-container .preferences {
+    width: 100%;
+  }
+
+  .preferences-container .preferences .aside {
+    width: 100%;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 0px;
+  }
+
+  .preferences-container .preferences .main {
+    width: 100%;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 30px;
+  }
+
+  .preferences-container .preferences-footer p {
+    width: 80%;
+    font-size: 12px;
+  }
+
+  .preferences-container .preferences-footer .btn-container {
+    width: 20%;
+  }
+
+  .preferences-container .list-container {
+    height: 70%;
+  }
+
+  .preferences-container .list-container::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .preferences-container .list-container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;
+  }
+
+  .preferences-container .list-container::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+
+  .confirmation-container .confirmation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .confirmation-container .confirmation-grid .confirmation-item {
+    padding: 10px;
+    width: calc(100% - 20px);
+  }
+
+  .confirmation-container p,
+  .confirmation-container h4,
+  .confirmation-container li {
+    font-size: 12px;
+  }
+
+  .confirmation-container
+    .confirmation-grid
+    .confirmation-item
+    .profile-detail-list {
+    padding: 10px;
+  }
+
+  .confirmation-container
+    .confirmation-grid
+    .confirmation-item
+    .confirmation-details
+    ul {
+    padding: 10px;
+  }
+
+  .confirmation-container
+    .confirmation-grid
+    .confirmation-item
+    .confirmation-details
+    ul
+    li {
+    padding: 5px;
+  }
+
+  .confirmation-container
+    .confirmation-grid
+    .confirmation-item
+    .confirmation-details
+    ul
+    li
+    h4 {
+    font-size: 14px;
+  }
+
+  .confirmation-container
+    .confirmation-grid
+    .confirmation-item
+    .confirmation-details
+    ul
+    li
+    p {
+    font-size: 12px;
+  }
+
+  .confirmation-container
+    .confirmation-grid
+    .confirmation-item
+    .confirmation-details
+    ul
+    li
+    img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .confirmation-container
+    .confirmation-grid
+    .confirmation-item
+    .confirmation-details
+    ul
+    li
+    .display-image {
+    width: 50px;
+    height: 50px;
+  }
+
+  .progress-container .title {
+    display: none;
+  }
+
+  .signup-form {
+    width: 95%;
+  }
+
+  .animation-container {
+    height: 80%;
+  }
+
+  .plan-container .plan-subcontainer {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    max-height: 550px;
+    gap: 15px;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .preferences-container .preferences .aside {
+    display: none;
+  }
+
+  .preferences-container .preferences .main {
+    width: 100%;
+    border-radius: 30px;
+    padding: 10px 15px;
+  }
+
+  .preferences-container p,
+  .preferences-container button {
+    font-size: 13px;
+  }
+
+  .confirmation-container h3 {
+    font-size: 16px;
+  }
+
+  .profile-list {
+    grid-template-columns: 3% 65% 22%;
+  }
 }
