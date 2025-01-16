@@ -5,7 +5,13 @@ const CustomTextInput = ({ name, icon, handleChange, value, placeholder }) => {
   return (
     <div className="custom-input-form-container">
       <input
-        type="text"
+        type={
+          name.includes("date")
+            ? "date"
+            : name.includes("fee")
+              ? "number"
+              : "text"
+        }
         name={name}
         value={value}
         onChange={(e) => handleChange(e)}

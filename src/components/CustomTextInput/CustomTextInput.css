@@ -1,7 +1,6 @@
 .custom-input-form-container {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
   position: relative;
   width: 100%;
 }

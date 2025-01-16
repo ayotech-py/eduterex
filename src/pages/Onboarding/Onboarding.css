@@ -305,13 +305,14 @@
 }
 
 .preferences-container .preferences .main {
-  width: 70%;
+  width: 75%;
   background-color: #ffadbc;
   border-top-right-radius: 30px;
   border-bottom-right-radius: 30px;
   padding: 20px 30px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 20px;
 }
 
@@ -374,12 +375,11 @@
 }
 
 .preferences-container .list-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 31% 31% 31%;
   gap: 20px;
-  height: 75%;
-  max-height: max-content;
-  overflow-y: auto;
+  overflow: auto;
+  max-height: 300px;
 }
 
 .preferences-container .list-container::-webkit-scrollbar {
@@ -399,6 +399,15 @@
 
 .preferences-container .list-container::-webkit-scrollbar-thumb:hover {
   background-color: #555;
+}
+
+.preferences-container .session-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  overflow: auto;
+  max-height: 350px;
 }
 
 .image-selector {
@@ -460,7 +469,7 @@
   grid-auto-flow: dense;
   grid-gap: 20px;
   overflow: auto;
-  max-height: 550px;
+  max-height: 500px;
 }
 
 .confirmation-container .confirmation-grid .confirmation-item {
@@ -469,7 +478,7 @@
   gap: 15px;
   background-color: #fff;
   padding: 15px 20px;
-  border-radius: 20px;
+  border-radius: 2px;
 }
 
 .confirmation-container
@@ -516,21 +525,6 @@
   padding: 10px;
 }
 
-.confirmation-container
-  .confirmation-grid
-  .confirmation-item
-  .confirmation-details
-  ul {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  justify-content: space-between;
-  background-color: #f3e8ff;
-  border-radius: 5px;
-  padding: 20px;
-  padding-left: 40px;
-  grid-gap: 5px;
-}
-
 .display-image {
   width: 150px;
   object-fit: cover;
@@ -549,6 +543,32 @@
   ul
   li {
   list-style-type: none;
+  line-height: 30px;
+}
+
+table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+}
+
+table td,
+table th {
+  padding: 5px 10px;
+}
+
+table tr:hover {
+  background-color: #e6f7ff;
+  cursor: pointer;
+}
+
+.odd-table {
+  background-color: #f9f9f9;
+}
+
+.even-table {
+  background-color: #fff;
 }
 
 @media screen and (max-width: 900px) {

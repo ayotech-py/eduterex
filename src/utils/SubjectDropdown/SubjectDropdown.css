@@ -1,6 +1,15 @@
 /* SubjectDropdown.css */
 .dropdown-container {
-  width: 90%;
+  display: flex;
+  width: 100%;
+  overflow: auto;
+  height: 320px;
+  max-height: 320px;
+  justify-content: space-between;
+}
+
+.dropdown-flex {
+  width: 48%;
 }
 
 .dropdown-btn {

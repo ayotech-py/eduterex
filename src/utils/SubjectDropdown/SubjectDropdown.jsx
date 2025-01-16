@@ -1,120 +1,56 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./SubjectDropdown.css";
-import { FiChevronDown, FiChevronRight, FiChevronsRight } from "react-icons/fi";
+import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 
-const subjectsData = {
-  Nursery: [
-    "Mathematics",
-    "English Language",
-    "Rhymes",
-    "Phonics",
-    "Elementary Science",
-    "Computer Science & Practical",
-    "Health Education",
-    "Creative & Cultural Art",
-    "Agricultural Science",
-    "Computer Science",
-    "Basic Science & Technology",
-    "Social Habit",
-    "Civic & Security Education",
-    "C.R.S",
-    "I.R.S",
-    "Social Studies",
-    "Home Economics",
-    "Handwriting",
-    "French Language",
-    "P.H.E",
-    "Current Affairs",
-  ],
-  Primary: [
-    "Mathematics",
-    "English Language",
-    "Phonics",
-    "Computer Science & Practical",
-    "Creative & Cultural Art",
-    "Agricultural Science",
-    "Basic Science & Technology",
-    "Quantitative Reasoning",
-    "Civic & Security Education",
-    "Verbal Reasoning",
-    "C.R.S",
-    "I.R.S",
-    "Social Studies",
-    "Pre-vocational",
-    "Home Economics",
-    "Security Education",
-    "Handwriting",
-    "Arabic Language",
-    "Hausa Language",
-    "French Language",
-    "P.H.E",
-    "Current Affairs",
-  ],
-  JSS: [
-    "Mathematics",
-    "English Language",
-    "P.H.E",
-    "Computer Science & Practical",
-    "Creative & Cultural Art",
-    "Basic Science",
-    "Basic Technology",
-    "Civic & Security Education",
-    "Pre-vocational",
-    "C.R.S",
-    "I.R.S",
-    "Social Studies",
-    "Business Studies",
-    "Arabic Language",
-    "Hausa Language",
-    "French Language",
-    "Current Affairs",
-  ],
-  SSS: [
-    "Mathematics",
-    "English Language",
-    "Literature in English",
-    "Biology",
-    "Chemistry",
-    "Physics",
-    "Geography",
-    "Civic Education",
-    "Animal Husbandry",
-    "Economics",
-    "French Language",
-    "Government",
-    "Commerce",
-    "Pre-Vocational Studies",
-    "Accounting",
-    "Current Affairs",
-    "Further Mathematics",
-    "Computer Science & Practical",
-    "C.R.S",
-    "I.R.S",
-    "Arabic Language",
-    "Hausa Language",
-  ],
-};
+const SubjectDropdown = ({ handleSubject, classList, subjectsList }) => {
+  // Update the initialization of selectedSubjects to work with the updated classList structure
+  const [selectedSubjects, setSelectedSubjects] = useState(
+    classList.reduce((acc, { className }) => ({ ...acc, [className]: [] }), {}),
+  );
 
-const SubjectDropdown = ({ handleSubject }) => {
-  const [selectedSubjects, setSelectedSubjects] = useState({
-    Nursery: [],
-    Primary: [],
-    JSS: [],
-    SSS: [],
-  });
+  const [previousLevel, setPreviousLevel] = useState(null);
 
-  const [isOpen, setIsOpen] = useState({
-    Nursery: false,
-    Primary: false,
-    JSS: false,
-    SSS: false,
-  });
+  const [isOpen, setIsOpen] = useState(
+    classList.reduce(
+      (acc, { className }) => ({ ...acc, [className]: false }),
+      {},
+    ),
+  );
 
   const toggleDropdown = (level) => {
     setIsOpen((prev) => ({
+      ...prev,
       [level]: !prev[level],
     }));
+
+    const previousLevel = getPreviousElement(classList, level);
+    setPreviousLevel(previousLevel);
+
+    const previousLevelSubjects = selectedSubjects[previousLevel];
+    const levelSubjects = selectedSubjects[level];
+
+    const isEmptyArray = levelSubjects.length > 0 ? false : true;
+
+    if (previousLevelSubjects && isEmptyArray) {
+      setSelectedSubjects((prev) => {
+        const newState = { ...prev, [level]: previousLevelSubjects };
+
+        handleSubject?.(newState);
+
+        return newState;
+      });
+    }
   };
+
+  function getPreviousElement(list, currentElement) {
+    const index = list.findIndex(
+      ({ className }) => className === currentElement,
+    );
+    if (index > 0) {
+      return list[index - 1]?.className; // Return the previous className
+    }
+    return null;
+  }
 
   const handleCheckboxChange = (level, subject) => {
     setSelectedSubjects((prev) => {
@@ -123,40 +59,84 @@ const SubjectDropdown = ({ handleSubject }) => {
         : [...prev[level], subject];
       const newState = { ...prev, [level]: updatedSubjects };
 
-      handleSubject(newState);
+      handleSubject?.(newState);
 
       return newState;
     });
   };
 
+  // Update the classList filtering logic
+  const oddClassList = classList
+    .filter((_, index) => index % 2 !== 0)
+    .map(({ className }) => className);
+  const evenClassList = classList
+    .filter((_, index) => index % 2 === 0)
+    .map(({ className }) => className);
+
   return (
     <div className="dropdown-container">
-      {Object.keys(subjectsData).map((level) => (
-        <div key={level} className="dropdown">
-          <div className="dropdown-btn" onClick={() => toggleDropdown(level)}>
-            {isOpen[level] ? (
-              <FiChevronDown className="dropdown-icon" />
-            ) : (
-              <FiChevronRight className="dropdown-icon" />
-            )}
-            <button>{level} Subjects</button>
-          </div>
-          {isOpen[level] && (
-            <div className="dropdown-menu overflow">
-              {subjectsData[level].map((subject) => (
-                <label key={subject} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={selectedSubjects[level].includes(subject)}
-                    onChange={() => handleCheckboxChange(level, subject)}
-                  />
-                  {subject}
-                </label>
-              ))}
+      <div className="dropdown-flex">
+        {evenClassList.map((level) => (
+          <div
+            key={level}
+            className={`dropdown ${isOpen[level] ? "maintain-height" : "overflow-height"}`}
+          >
+            <div className="dropdown-btn" onClick={() => toggleDropdown(level)}>
+              {isOpen[level] ? (
+                <FiChevronDown className="dropdown-icon" />
+              ) : (
+                <FiChevronRight className="dropdown-icon" />
+              )}
+              <button>{level} Subjects</button>
             </div>
-          )}
-        </div>
-      ))}
+            {isOpen[level] && (
+              <div className="dropdown-menu overflow">
+                {subjectsList.map((subject) => (
+                  <label key={subject} className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={selectedSubjects[level]?.includes(subject)}
+                      onChange={() => handleCheckboxChange(level, subject)}
+                    />
+                    {subject}
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="dropdown-flex">
+        {oddClassList.map((level) => (
+          <div
+            key={level}
+            className={`dropdown ${isOpen[level] ? "maintain-height" : "overflow-height"}`}
+          >
+            <div className="dropdown-btn" onClick={() => toggleDropdown(level)}>
+              {isOpen[level] ? (
+                <FiChevronDown className="dropdown-icon" />
+              ) : (
+                <FiChevronRight className="dropdown-icon" />
+              )}
+              <button>{level} Subjects</button>
+            </div>
+            {isOpen[level] && (
+              <div className="dropdown-menu overflow">
+                {subjectsList.map((subject) => (
+                  <label key={subject} className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={selectedSubjects[level]?.includes(subject)}
+                      onChange={() => handleCheckboxChange(level, subject)}
+                    />
+                    {subject}
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

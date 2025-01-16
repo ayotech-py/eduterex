@@ -14,11 +14,12 @@ import {
   FiLock,
   FiCheck,
   FiX,
+  FiUserPlus,
 } from "react-icons/fi";
 import nigeriaStates from "../../utils/nigeria-state-and-lgas.json"; // Import JSON file
 import { motion, AnimatePresence } from "framer-motion";
 import { UseProgressIcon } from "../../components/UseProgressIcon";
-import AddTeachersModal from "../../components/modals/AddTeacherModal/AddTeachersModal";
+import AddClassModal from "../../components/modals/AddClassModal/AddClassModal";
 import ListItem from "../../components/ListItem/ListItem";
 import SubjectDropdown from "../../utils/SubjectDropdown/SubjectDropdown";
 import result_1 from "../../images/result_template/result_1.jpg";
@@ -29,11 +30,16 @@ import result_5 from "../../images/result_template/result_5.jpg";
 import result_6 from "../../images/result_template/result_6.jpg";
 import { isFormValid } from "../../utils/OnboardingUtils/FormChecker";
 import { AlertBadge } from "../../components/AlertBadge";
+import AddSubjectModal from "../../components/modals/AddSubjectModal";
+import CustomTextInput from "../../components/CustomTextInput/CustomTextInput";
+import CustomSelectionInput from "../../components/CustomSelectionInput/CustomSelectionInput";
+import { AiFillCalendar } from "react-icons/ai";
 
 const SchoolProfile = ({ onNext, setOnboardingForm }) => {
   const [formData, setFormData] = useState({
     school_name: "",
     address: "",
+    motto: "",
     state: "",
     lga: "",
     contact_email: "",
@@ -179,6 +185,18 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
           <HiOutlineLocationMarker className="icons" />
         </div>
       </div>
+      <div className="input-form-container">
+        <input
+          type="text"
+          name="motto"
+          value={formData.motto}
+          onChange={handleChange}
+          placeholder="Motto"
+        />
+        <div className="form-icons">
+          <HiOutlineLocationMarker className="icons" />
+        </div>
+      </div>
       <div className="form-flex">
         <div className="input-form-container" style={{ width: "45%" }}>
           <select
@@ -290,7 +308,7 @@ const AdminForm = ({ onNext, setOnboardingForm }) => {
   return (
     <section className="signup-form">
       <div className="onboarding-title">
-        <h3>Admin Registration</h3>
+        <h3>Admin Profile</h3>
         <p>Provide the necessary details to create your admin profile.</p>
       </div>
       {alert && <AlertBadge message={message} />}
@@ -586,7 +604,9 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
   const handleOpenModal = () => setIsModalVisible(true);
   const handleCloseModal = () => setIsModalVisible(false);
   const [currentSetting, setCurrentSetting] = useState(1);
-  const [appendTeacherObject, setAppendTeacherObject] = useState([]);
+  const [classList, setClassList] = useState([]);
+
+  const [subjectList, setSubjectList] = useState([]);
 
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -599,7 +619,9 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
   };
 
   const [formData, setFormData] = useState({
-    teacher_to_class: [],
+    session: {},
+    classes: [],
+    subjects: [],
     subject_to_class: [],
     result_design_id: "",
   });
@@ -607,9 +629,16 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
   useEffect(() => {
     setFormData((prevData) => ({
       ...prevData,
-      teacher_to_class: appendTeacherObject,
+      classes: classList,
     }));
-  }, [appendTeacherObject]);
+  }, [classList]);
+
+  useEffect(() => {
+    setFormData((prevData) => ({
+      ...prevData,
+      subjects: subjectList,
+    }));
+  }, [subjectList]);
 
   const [editIndex, setEditIndex] = useState(null);
 
@@ -619,10 +648,14 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
   };
 
   const handleDelete = (index) => {
-    const newTeacherList = appendTeacherObject.filter(
-      (obj, i) => i !== index - 1,
-    );
-    setAppendTeacherObject(newTeacherList);
+    const newClassList = classList.filter((obj, i) => i !== index - 1);
+    setClassList(newClassList);
+    setEditIndex(null);
+  };
+
+  const handleSubjectDelete = (index) => {
+    const newSubjectList = subjectList.filter((obj, i) => i !== index - 1);
+    setSubjectList(newSubjectList);
     setEditIndex(null);
   };
 
@@ -636,9 +669,31 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
     [],
   );
 
+  const [message, setMessagee] = useState("");
+
+  const [sessionData, setSessionData] = useState({
+    session: "",
+    start_date: "",
+    end_date: "",
+    term_name: "",
+    term_start_date: "",
+    term_end_date: "",
+  });
+
   const handleNext = () => {
-    if (currentSetting < 3) {
-      setCurrentSetting(currentSetting + 1);
+    if (currentSetting < 4) {
+      if (currentSetting === 1) {
+        if (isFormValid(sessionData, setMessagee)) {
+          setMessagee("");
+          setFormData((prevData) => ({
+            ...prevData,
+            session: sessionData,
+          }));
+          setCurrentSetting(currentSetting + 1);
+        }
+      } else {
+        setCurrentSetting(currentSetting + 1);
+      }
     } else {
       setOnboardingForm((prevData) => ({
         ...prevData,
@@ -648,10 +703,18 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
     }
   };
 
+  const handleSessionChange = (e) => {
+    const { name, value, files } = e.target;
+    setSessionData({
+      ...sessionData,
+      [name]: files ? files[0] : value,
+    });
+  };
+
   return (
     <div className="preferences-container">
       <div className="onboarding-title">
-        <h3>Configure Your Academic Setup</h3>
+        <h3>Configure Your Academic Profile</h3>
         <p>Streamline your school operations by setting up key preferences. </p>
       </div>
       <div className="preferences">
@@ -661,54 +724,138 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
               <UseProgressIcon currentStep={currentSetting} step={1} />
             </div>
             <div style={{ width: "90%", lineHeight: 1.4 }}>
-              <h3>Assign Teachers to Classes</h3>
-              <p>
-                Match teachers to their respective classes for efficient class
-                management.
-              </p>
+              <h3>Create Your Session & Terms</h3>
             </div>
           </div>
           <div className="preference-item">
-            <div style={{ width: "10%", lineHeight: 1.4 }}>
+            <div style={{ width: "10%" }}>
               <UseProgressIcon currentStep={currentSetting} step={2} />
             </div>
             <div style={{ width: "90%", lineHeight: 1.4 }}>
-              <h3>Assign Subjects to Classes</h3>
-              <p>
-                Allocate subjects to the appropriate classes based on the
-                curriculum.
-              </p>
+              <h3>Create Your Classes</h3>
             </div>
           </div>
-
           <div className="preference-item">
             <div style={{ width: "10%" }}>
               <UseProgressIcon currentStep={currentSetting} step={3} />
             </div>
-            <div style={{ width: "90%", lineHeight: 1.3 }}>
-              <h3>Result Format Preference</h3>
-              <p>
-                Allocate subjects to the appropriate classes based on the
-                curriculum.
-              </p>
+            <div style={{ width: "90%", lineHeight: 1.4 }}>
+              <h3>Create Your Subjects</h3>
             </div>
           </div>
+          <div className="preference-item">
+            <div style={{ width: "10%", lineHeight: 1.4 }}>
+              <UseProgressIcon currentStep={currentSetting} step={4} />
+            </div>
+            <div style={{ width: "90%", lineHeight: 1.4 }}>
+              <h3>Assign Subjects to Classes</h3>
+            </div>
+          </div>
+
+          {/* <div className="preference-item">
+            <div style={{ width: "10%" }}>
+              <UseProgressIcon currentStep={currentSetting} step={5} />
+            </div>
+            <div style={{ width: "90%", lineHeight: 1.3 }}>
+              <h3>Result Format Preference</h3>
+            </div>
+          </div> */}
         </div>
         {currentSetting === 1 && (
           <div className="main">
             <div className="main-preference-headidng">
-              <h3>Assign Teachers to Classes</h3>
+              <h3>Create Your Session and Terms</h3>
               <p style={{ textAlign: "center" }}>
-                Match teachers to their respective classes for efficient class
-                management.
+                Easily create new classes by adding their names and assigning
+                subjects.
               </p>
             </div>
-            {formData.teacher_to_class.length > 0 ? (
+            <div className="session-profile overflow">
+              <CustomSelectionInput
+                placeholder={"Session"}
+                name={"session"}
+                value={sessionData.session}
+                handleChange={handleSessionChange}
+                data={[
+                  "2022/2023",
+                  "2023/2024",
+                  "2024/2025",
+                  "2025/2026",
+                  "2026/2027",
+                  "2027/2028",
+                  "2028/2029",
+                  "2029/2030",
+                ]}
+                icon={<FiUserPlus className="icons" />}
+              />
+              <div style={{ width: "100%" }}>
+                <label htmlFor="date">Session Start Date</label>
+                <CustomTextInput
+                  name={"start_date"}
+                  placeholder={"Session Start Date"}
+                  value={sessionData.start_date}
+                  handleChange={handleSessionChange}
+                  icon={<AiFillCalendar className="icons" />}
+                />
+              </div>
+              <div style={{ width: "100%" }}>
+                <label htmlFor="date">Session End Date</label>
+                <CustomTextInput
+                  name={"end_date"}
+                  placeholder={"Session End Date"}
+                  value={sessionData.end_date}
+                  handleChange={handleSessionChange}
+                  icon={<AiFillCalendar className="icons" />}
+                />
+              </div>
+              <h4>Term Details</h4>
+              <CustomTextInput
+                name={"term_name"}
+                placeholder={"Name of term e.g First Term"}
+                value={sessionData.term_name}
+                handleChange={handleSessionChange}
+                icon={<FiUser className="icons" />}
+              />
+              <div style={{ width: "100%" }}>
+                <label htmlFor="date">Term Start Date</label>
+                <CustomTextInput
+                  name={"term_start_date"}
+                  placeholder={"First Term Start Date"}
+                  value={sessionData.term_start_date}
+                  handleChange={handleSessionChange}
+                  icon={<AiFillCalendar className="icons" />}
+                />
+              </div>
+              <div style={{ width: "100%" }}>
+                <label htmlFor="date">Term End Date</label>
+                <CustomTextInput
+                  name={"term_end_date"}
+                  placeholder={"First Term End Date"}
+                  value={sessionData.term_end_date}
+                  handleChange={handleSessionChange}
+                  icon={<AiFillCalendar className="icons" />}
+                />
+              </div>
+            </div>
+            {message && <AlertBadge message={message} />}
+          </div>
+        )}
+        {currentSetting === 2 && (
+          <div className="main">
+            <div className="main-preference-headidng">
+              <h3>Create Your Classes</h3>
+              <p style={{ textAlign: "center" }}>
+                Easily create new classes by adding their names and assigning
+                subjects. This helps organize your school’s curriculum and
+                manage subject distribution efficiently.
+              </p>
+            </div>
+            {formData.classes.length > 0 ? (
               <div className="list-parent">
                 <div className="list-container">
-                  {formData.teacher_to_class.map((obj, index) => (
+                  {formData.classes.map((obj, index) => (
                     <ListItem
-                      object={obj}
+                      object={obj.className}
                       index={index + 1}
                       handleEdit={handleEdit}
                       handleDelete={handleDelete}
@@ -716,10 +863,6 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
                   ))}
                 </div>
                 <div className="preferences-footer">
-                  <p>
-                    Teachers who handles more than one classes should be done
-                    after the onboarding process
-                  </p>
                   <div className="btn-container">
                     <button onClick={handleOpenModal} className="btn">
                       Add
@@ -740,17 +883,70 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
               </div>
             )}
 
-            <AddTeachersModal
+            <AddClassModal
               isVisible={isModalVisible}
               onClose={handleCloseModal}
-              appendTeacherObject={appendTeacherObject}
-              setAppendTeacherObject={setAppendTeacherObject}
+              classList={classList}
+              setClassList={setClassList}
               isEdit={editIndex}
               setEditIndex={setEditIndex}
             />
           </div>
         )}
-        {currentSetting === 2 && (
+        {currentSetting === 3 && (
+          <div className="main">
+            <div className="main-preference-headidng">
+              <h3>Create Your Subjects</h3>
+              <p style={{ textAlign: "center" }}>
+                Easily create new classes by adding their names and assigning
+                subjects. This helps organize your school’s curriculum and
+                manage subject distribution efficiently.
+              </p>
+            </div>
+            {formData.subjects.length > 0 ? (
+              <div className="list-parent">
+                <div className="list-container">
+                  {formData.subjects.map((obj, index) => (
+                    <ListItem
+                      object={obj}
+                      index={index + 1}
+                      handleEdit={handleEdit}
+                      handleDelete={handleSubjectDelete}
+                    />
+                  ))}
+                </div>
+                <div className="preferences-footer">
+                  <div className="btn-container">
+                    <button onClick={handleOpenModal} className="btn">
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="no-record-yet">
+                <HiOutlineClipboardList
+                  className="no-record-icon"
+                  style={{ transform: "scale(1.2)" }}
+                />
+                <p>No records yet</p>
+                <div className="btn-container">
+                  <button onClick={handleOpenModal}>Add record</button>
+                </div>
+              </div>
+            )}
+
+            <AddSubjectModal
+              isVisible={isModalVisible}
+              onClose={handleCloseModal}
+              subjectList={subjectList}
+              setSubjectList={setSubjectList}
+              isEdit={editIndex}
+              setEditIndex={setEditIndex}
+            />
+          </div>
+        )}
+        {currentSetting === 4 && (
           <div className="main">
             <div className="main-preference-headidng">
               <h3>Assign Subjects to Classes</h3>
@@ -760,12 +956,21 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
               </p>
             </div>
             <div>
-              <SubjectDropdown handleSubject={handleSubject} />
+              <SubjectDropdown
+                classList={classList}
+                subjectsList={subjectList}
+                handleSubject={handleSubject}
+              />
             </div>
+            <p style={{ fontSize: "12px" }}>
+              Note: Once you select subjects for a class, the same subjects will
+              automatically be filled in the next class to save you time. Please
+              continue selecting subjects in a row-wise manner for consistency.
+            </p>
           </div>
         )}
 
-        {currentSetting === 3 && (
+        {/* {currentSetting === 5 && (
           <div className="main">
             <div className="main-preference-headidng">
               <h3>Result Format Preference</h3>
@@ -794,7 +999,7 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
       </div>
       <div className="btn-container">
         <button onClick={handleNext} className="btn">
@@ -807,13 +1012,36 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
 
 const ConfirmationPage = ({ onboardingForm }) => {
   useEffect(() => {
-    console.log("Onboarding", onboardingForm);
-  }, []);
+    console.log(onboardingForm);
+  }, [onboardingForm]);
 
   function getImageById(id) {
     const result = result_images.find((item) => item.id === id);
     return result ? result.image : null;
   }
+
+  const handleOnboarding = async () => {
+    console.log("result", onboardingForm);
+    try {
+      const url = "http://127.0.0.1:8000/api/onboarding/";
+      const request = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(onboardingForm),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      let response = await request.json();
+      if (request.status === 201) {
+        console.log("okayyy", response);
+      } else {
+        console.log(response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="confirmation-container">
       <div className="onboarding-title">
@@ -847,6 +1075,10 @@ const ConfirmationPage = ({ onboardingForm }) => {
               <div className="profile-detail-list">
                 <h4>Address: </h4>
                 <p>{onboardingForm.schoolProfile.address} </p>
+              </div>
+              <div className="profile-detail-list">
+                <h4>Motto: </h4>
+                <p>{onboardingForm.schoolProfile.motto} </p>
               </div>
               <div className="profile-detail-list">
                 <h4>State: </h4>
@@ -895,53 +1127,50 @@ const ConfirmationPage = ({ onboardingForm }) => {
         </div>
         <div className="confirmation-item">
           <h3>Academic Profile</h3>
+          <h4>Session/Term</h4>
+          {Object.entries(onboardingForm.academicProfile.session).map(
+            ([key, value], index) => (
+              <div key={index} className="profile-detail-list">
+                <h4>{key.replaceAll("_", " ").toLocaleLowerCase()}: </h4>
+                <p>{value} </p>
+              </div>
+            ),
+          )}
           <div className="confirmation-details">
-            <div className="teacher_class">
-              <h4>Teachers to Class</h4>
-              {onboardingForm.academicProfile.teacher_to_class.map(
-                (obj, index) => (
-                  <div className="profile-list" key={index}>
-                    <p>{index + 1}.</p>
-                    <p>{obj.full_name}</p>
+            <table
+              border="1"
+              style={{ width: "100%", borderCollapse: "collapse" }}
+            >
+              <thead>
+                <tr className="odd-table">
+                  <th>S/N</th>
+                  <th>Classes</th>
+                  <th>Subjects</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(
+                  onboardingForm.academicProfile.subject_to_class,
+                ).map(([key, value], index) => (
+                  <tr
+                    key={key}
+                    className={index % 2 === 1 ? "odd-table" : "even-table"}
+                  >
+                    <td>{index + 1}</td>
+                    <td>{key}</td>
+                    <td>
+                      <ul>
+                        {value.map((subject, index) => (
+                          <li key={index}>{subject}</li>
+                        ))}
+                      </ul>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-                    <p>{obj.class}</p>
-                  </div>
-                ),
-              )}
-            </div>
-            <h4>Nursery Classes Subjects</h4>
-            <ul>
-              {onboardingForm.academicProfile.subject_to_class.Nursery.map(
-                (obj, index) => (
-                  <li key={index}>{obj}</li>
-                ),
-              )}
-            </ul>
-            <h4>Primary Classes Subjects</h4>
-            <ul>
-              {onboardingForm.academicProfile.subject_to_class.Primary.map(
-                (obj, index) => (
-                  <li key={index}>{obj}</li>
-                ),
-              )}
-            </ul>
-            <h4>JSS Classes Subjects</h4>
-            <ul>
-              {onboardingForm.academicProfile.subject_to_class.JSS.map(
-                (obj, index) => (
-                  <li key={index}>{obj}</li>
-                ),
-              )}
-            </ul>
-            <h4>SSS Classes Subjects</h4>
-            <ul>
-              {onboardingForm.academicProfile.subject_to_class.SSS.map(
-                (obj, index) => (
-                  <li key={index}>{obj}</li>
-                ),
-              )}
-            </ul>
-            <h4>Result Design</h4>
+            <h4>Classes</h4>
             <div
               style={{
                 display: "flex",
@@ -949,18 +1178,54 @@ const ConfirmationPage = ({ onboardingForm }) => {
                 alignItems: "center",
               }}
             >
-              <div className="display-image">
-                <img
-                  src={getImageById(
-                    onboardingForm.academicProfile.result_design_id,
-                  )}
-                  alt=""
-                  srcset=""
-                />
-              </div>
+              <table
+                border="1"
+                style={{ width: "100%", borderCollapse: "collapse" }}
+              >
+                <thead>
+                  <tr className="odd-table">
+                    <th>S/N</th>
+                    <th>Classes</th>
+                    <th>School Bill</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {onboardingForm.academicProfile.classes.map((item, index) => (
+                    <tr
+                      key={index}
+                      className={index % 2 === 1 ? "odd-table" : "even-table"}
+                    >
+                      <td>{index + 1}</td>
+                      <td>{item.className}</td>
+                      <td>
+                        <ul>
+                          {item.bills.map((bill, index) => (
+                            <li key={index}>
+                              {bill.billName} - ₦{bill.billAmount}
+                            </li>
+                          ))}
+                          <li key={index} style={{ fontWeight: "600" }}>
+                            Total - ₦
+                            {item.bills.reduce(
+                              (total, bill) =>
+                                total + (parseFloat(bill.billAmount) || 0),
+                              0,
+                            )}
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
+      </div>
+      <div className="btn-container">
+        <button onClick={handleOnboarding} className="btn">
+          Submit
+        </button>
       </div>
     </div>
   );

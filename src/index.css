@@ -28,7 +28,9 @@ li {
   select,
   button,
   ul,
-  li {
+  li,
+  th,
+  td {
     font-size: 14px;
   }
 

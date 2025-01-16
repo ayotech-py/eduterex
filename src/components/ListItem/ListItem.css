@@ -12,15 +12,11 @@
 }
 
 .item-list .list-item-name {
-  width: 40%;
-}
-
-.item-list .list-item-class {
-  width: 30%;
+  width: 60%;
 }
 
 .item-list .list-item-action {
-  width: 10%;
+  width: 40px;
   display: flex;
   justify-content: space-between;
 }
