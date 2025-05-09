@@ -1,0 +1,117 @@
+.signin-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #d4b8ff, #f3e8ff, #ffadbc);
+  padding-left: 10%;
+  padding-right: 10%;
+}
+
+.signin-container {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-bottom: 50px;
+  justify-content: center;
+  padding-left: 30%;
+  padding-right: 30%;
+}
+
+.signin-container .member-div-label {
+  background-color: #711a75;
+  color: #fff;
+  border-radius: 25px;
+  padding: 8px 25px;
+  box-sizing: border-box;
+}
+
+.signin-page .input-form-container input,
+.signin-page .input-form-container select {
+  background-color: transparent;
+  padding: 10px 5px 10px 5px;
+  border: none;
+  border-bottom: 1px solid #925fe2;
+  width: 100%;
+  padding-left: 30px;
+  color: black;
+  flex: 1;
+}
+
+.signin-page .sigin-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.signin-page .input-form-container input:focus,
+.signin-page .input-form-container select:focus {
+  outline: none;
+}
+
+.signin-page .input-form-container {
+  display: flex;
+  align-items: center;
+}
+
+.signin-page .form-icons {
+  position: absolute;
+}
+
+.signin-page .form-icons .icons {
+  width: 20px;
+  height: 20px;
+  color: gray;
+}
+
+.signin-page .signin-page-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.signin-page .signin-page-action a:hover {
+  text-decoration: underline;
+}
+
+.signin-page .logo {
+  width: 130px;
+  height: auto;
+}
+
+.signin-page .logo img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 25px;
+}
+
+@media screen and (min-width: 751px) and (max-width: 1300px) {
+  .signin-page {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .signin-container {
+    width: 60%;
+    padding-left: 20%;
+    padding-right: 20%;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .signin-page {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .signin-container {
+    width: 90%;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+}

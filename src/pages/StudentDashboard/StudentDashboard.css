@@ -1,0 +1,254 @@
+.student-dashboard {
+  display: flex;
+  gap: 35px;
+  padding: 35px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.sd-main {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sd-aside {
+  width: 25%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.student-subject-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.sd-banner {
+  width: 100%;
+  background-color: #711a75;
+  border-radius: 15px;
+  color: #fff;
+  padding: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  height: 250px;
+}
+
+.sd-banner {
+  position: relative;
+}
+
+.sd-banner-right {
+  z-index: 3;
+}
+
+.sd-banner-right img {
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.sd-banner-left {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 4;
+}
+
+.sd-banner-bottom {
+  line-height: 1.5;
+}
+
+.student-dashboard .term-card-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 30px;
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sd-payment {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  width: 100%;
+}
+
+.sd-action-icon {
+  font-size: 100px;
+  color: #711a75;
+}
+
+.sd-action-card a {
+  text-decoration: none;
+}
+
+.sd-action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  gap: 5px;
+  padding: 40px;
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.sd-action-card:hover {
+  transform: translateY(5px);
+  transition: 0.3s;
+  border: 3px solid #711a75;
+}
+
+.sd-action-container {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.sd-action-card h3 {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.sd-action-card p {
+  text-align: center;
+}
+
+.sd-subject-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.numbering {
+  background-color: #711a75;
+  color: #fff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+.discount-student {
+  background-color: #fff;
+  padding: 4px 15px;
+  border-radius: 15px;
+  font-size: 12px !important;
+}
+
+.attendance-status-student {
+  font-size: 25px !important;
+}
+
+.sd-attendance-container .d-student-chart {
+  width: 100%;
+}
+
+@media screen and (min-width: 751px) and (max-width: 1300px) {
+  .sd-banner {
+    padding: 50px 25px;
+  }
+
+  .sd-main {
+    width: 65%;
+    gap: 15px;
+  }
+
+  .sd-aside {
+    width: 35%;
+    gap: 25px;
+  }
+
+  .student-dashboard {
+    gap: 15px;
+    padding: 20px;
+    width: 100%;
+  }
+
+  .sd-banner-right {
+    bottom: 0;
+    right: -20px;
+  }
+
+  .sd-banner-right img {
+    height: 270px;
+  }
+
+  .sd-payment,
+  .sd-action-container {
+    gap: 15px;
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .student-dashboard {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .sd-main {
+    width: 100%;
+    gap: 15px;
+  }
+
+  .sd-aside {
+    width: 100%;
+  }
+
+  .sd-banner {
+    padding: 40px 10px;
+    height: 200px;
+  }
+
+  .sd-banner {
+    position: relative;
+  }
+
+  .sd-banner-right img {
+    height: 120px;
+    width: 120px;
+    min-width: 120px;
+  }
+
+  .sd-payment,
+  .sd-action-container {
+    gap: 15px;
+    flex-direction: column;
+  }
+
+  .discount-student {
+    font-size: 11px !important;
+  }
+
+  .attendance-status-student {
+    font-size: 20px !important;
+  }
+
+  .student-subject-section {
+  }
+}

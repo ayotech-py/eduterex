@@ -1,0 +1,143 @@
+.s-plan-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+  box-sizing: border-box;
+}
+
+.s-plan-container .plan-subcontainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.s-plan-container .plan-subcontainer .plan-save-label {
+  color: red;
+}
+
+.s-plan-container .plan-card {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  gap: 15px;
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+
+.s-plan-container .plan-card .amount-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.s-plan-container .plan-card .amount-flex h1 {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.s-plan-container .plan-card .circle-check {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.s-plan-container .plan-card .checkmark {
+  font-size: 13px;
+}
+
+.s-plan-container .plan-card .plan-item-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.s-plan-container .plan-card .plan-item {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
+
+.paystack-white-btn button {
+  background-color: #fff;
+  color: #711a75;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+}
+
+.subscription-content {
+  display: grid;
+  grid-template-columns: 65% 35%;
+  gap: 20px;
+}
+
+.subscription-content .new-table-style input {
+  min-width: 50px;
+  width: 60px;
+}
+
+.subscription-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.discount-text {
+  font-size: 13px !important;
+  text-align: center;
+  color: red;
+  font-weight: 600;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+  color: red;
+  font-size: 13px !important;
+}
+
+.paystack-secure {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.paystack-secure img {
+  max-width: 300px;
+}
+
+.deduct-price {
+  font-size: 13px !important;
+  color: red;
+}
+
+.s-plan-container button {
+  background-color: none;
+  border: none;
+}
+
+@media screen and (max-width: 850px) {
+  .s-plan-container .plan-subcontainer {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+  }
+
+  .subscription-content {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 20px;
+  }
+}

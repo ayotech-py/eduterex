@@ -1,0 +1,55 @@
+/* Container Styling */
+.school-not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f9;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Card Styling */
+.school-not-found-card {
+  background-color: white;
+  padding: 30px 40px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  border: 1px solid #711a75;
+}
+
+/* Icon Styling */
+.school-icon {
+  font-size: 60px;
+  color: #ffadbc;
+  margin-bottom: 15px;
+  animation: bounce 1.5s infinite;
+}
+
+/* Title & Message */
+.school-not-found-container .title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.school-not-found-container .message {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Bouncing Animation */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}

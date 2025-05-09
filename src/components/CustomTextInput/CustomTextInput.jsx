@@ -1,23 +1,37 @@
 import React from "react";
 import "./CustomTextInput.css";
 
-const CustomTextInput = ({ name, icon, handleChange, value, placeholder }) => {
+const CustomTextInput = ({
+  name,
+  icon,
+  handleChange,
+  value,
+  placeholder,
+  disabled,
+}) => {
   return (
     <div className="custom-input-form-container">
       <input
+        id={name}
         type={
           name.includes("date")
             ? "date"
-            : name.includes("fee")
+            : name.toLowerCase().includes("amount")
               ? "number"
-              : "text"
+              : name.includes("password")
+                ? "password"
+                : name.includes("time")
+                  ? "time"
+                  : "text"
         }
         name={name}
         value={value}
         onChange={(e) => handleChange(e)}
         placeholder={placeholder}
+        disabled={disabled}
       />
-      <div className="form-icons">{icon}</div>
+      {/* <label style={{ fontSize: "13px" }}>{placeholder}</label> */}
+      {/* <div className="form-icons">{icon}</div> */}
     </div>
   );
 };

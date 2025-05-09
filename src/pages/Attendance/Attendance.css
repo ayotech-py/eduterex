@@ -1,0 +1,115 @@
+.attendance-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  padding: 40px;
+  box-sizing: border-box;
+  font-size: 14px;
+  height: 100%;
+}
+
+.attendance-container .student-class {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.attendance-calendar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.attendance-calendar h3,
+.attendance-calendar p {
+  padding: 10px 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  text-align: center;
+  font-weight: 500;
+  width: 250px;
+}
+
+.attendance-icon {
+  font-size: 25px;
+  color: #711a75;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.attendance-icon:hover {
+  transform: scale(1.2);
+}
+
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: #fff;
+}
+
+.attendance-table th,
+.attendance-table td {
+  border: 1px solid #ddd;
+  text-align: center;
+  padding: 8px;
+}
+
+.attendance-table th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.new-table-style td input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.attendance-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.attendance-names {
+  width: 20%;
+  max-width: 20%;
+}
+
+.attendance-dates {
+  width: 80%;
+}
+
+@media (max-width: 768px) {
+  .attendance-container {
+    padding: 25px 10px;
+  }
+
+  .attendance-table th,
+  .attendance-table td {
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  .attendance-calendar h3 {
+    font-size: 16px;
+    width: 200px;
+  }
+
+  .attendance-names {
+    width: 60%;
+    max-width: 60%;
+  }
+
+  .attendance-dates {
+    width: 40%;
+    overflow: auto;
+  }
+}
+
+@media screen and (min-width: 751px) and (max-width: 1300px) {
+  .attendance-calendar h3,
+  .attendance-calendar p {
+    font-size: 16px;
+    width: 200px;
+  }
+}

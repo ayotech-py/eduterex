@@ -1,0 +1,40 @@
+const handleGenerateQuestionExt = async () => {
+    setLoading((prev) => ({ ...prev, generateQuestionLoading: true }));
+    const token = getToken();
+    const url =
+      "https://eduterexbackend-production.up.railway.app/api/generate-mcqs/";
+    //const url = "http://127.0.0.1:7000/api/generate-mcqs/";
+
+    try {
+      const extractedText = await extractTextFromFileUrl(selectedFile);
+      if (!extractedText || extractedText.trim() === "") {
+        console.error("No text found in the file.");
+        return;
+      }
+
+      const response = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          q_type: generateQType.join(", "),
+          text: extractedText,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setLoading((prev) => ({ ...prev, generateQuestionLoading: false }));
+
+      const data = await response.json();
+      if (response.status === 200) {
+        setQuestions(data.data);
+      } else {
+        setMessage(data.message);
+        setSuccessStatus(false);
+      }
+    } catch (error) {
+      setLoading((prev) => ({ ...prev, generateQuestionLoading: false }));
+      setMessage("An error occured, please try again later.");
+      setSuccessStatus(false);
+    }
+  };

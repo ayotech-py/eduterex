@@ -1,0 +1,41 @@
+.privacy-header {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  background-color: #711a75;
+  padding: 70px 20px;
+  color: #fff;
+  gap: 10px;
+  text-align: center;
+}
+
+.privacy-link {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.privacy-link a {
+  color: #fff;
+}
+
+.content-container {
+  background: linear-gradient(135deg, #d4b8ff, #f3e8ff, #ffadbc);
+}
+
+.privacy-content {
+  max-width: 800px;
+  margin: auto;
+  padding: 25px 10px;
+  line-height: 2;
+}
+
+.privacy-content li {
+  margin-left: 20px;
+}
+
+.privacy-container h1,
+.privacy-container h2,
+.privacy-container strong {
+  font-weight: 600;
+}

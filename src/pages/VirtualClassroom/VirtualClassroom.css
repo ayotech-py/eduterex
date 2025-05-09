@@ -1,0 +1,55 @@
+.vc-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px 40px;
+  box-sizing: border-box;
+  font-size: 14px;
+  height: 100%;
+}
+
+.vc-action-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.vc-action {
+  background-color: #ffff;
+  display: flex;
+  border-radius: 25px;
+}
+
+.vc-action .action-name {
+  padding: 7px 25px;
+  border-radius: 25px;
+  min-width: 80px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.vc-action .selected {
+  background-color: #711a75;
+  color: #f3e8ff;
+  transition: 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+  .vc-container {
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .vc-container .vc-action {
+    overflow: auto;
+  }
+
+  .vc-action .action-name {
+    min-width: max-content;
+    padding: 5px 20px;
+  }
+
+  .vc-action .action-name span {
+    font-size: 12px !important;
+  }
+}

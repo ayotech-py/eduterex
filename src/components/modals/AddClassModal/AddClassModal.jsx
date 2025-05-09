@@ -12,8 +12,11 @@ import { BsCash } from "react-icons/bs";
 import { PiMinusCircleBold, PiPlusCircleBold } from "react-icons/pi";
 import { RiBillFill } from "react-icons/ri";
 import { BiEdit } from "react-icons/bi";
+import CustomSmallButton from "../../Buttons/CustomSmallButton";
+import { formatAmount } from "../../FormatAmount";
+import ContentTitle from "../../ContentTitle";
 
-const AddTeachersModal = ({
+const AddClassModal = ({
   isVisible,
   onClose,
   setClassList,
@@ -49,6 +52,7 @@ const AddTeachersModal = ({
   };
 
   const handleAdd = () => {
+    setMessage("");
     if (!formData?.className.trim()) {
       setMessage("Class name cannot be empty.");
       setAlert(true);
@@ -114,11 +118,13 @@ const AddTeachersModal = ({
   if (!isVisible) return null;
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay add-class">
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <div>
+        <div
+          style={{ textAlign: "center" }}
+          className="modal-heading-container"
+        >
           <h2>{isEdit ? "Edit Class" : "Create Class"}</h2>
-          <p>Please enter the name of the class.</p>
         </div>
         <MdClose
           className="close-modal"
@@ -127,7 +133,7 @@ const AddTeachersModal = ({
             clearForm();
           }}
         />
-        <div className="teacher-profile">
+        <div className="modal-sub-container overflow">
           <CustomTextInput
             name="class"
             placeholder="Class Name"
@@ -137,73 +143,78 @@ const AddTeachersModal = ({
             }
             icon={<AiOutlineUsergroupAdd className="icons" />}
           />
-          <p>School bills for this class</p>
+          <div>
+            <ContentTitle title={"Class Bill"} />
+            <p style={{ fontSize: "12px" }}>
+              <i>
+                <span style={{ color: "red", fontSize: "12px" }}>Note:</span>{" "}
+                Class bill should consist of the mandatory bills only for this
+                particular class.
+              </i>
+            </p>
+          </div>
           <div>
             {formData?.bills.length > 0 ? (
-              <table
-                border="1"
-                style={{
-                  width: "100%",
-                  borderCollapse: "collapse",
-                  textAlign: "center",
-                }}
-              >
-                <thead>
-                  <tr>
-                    <th>S/N</th>
-                    <th>Bill Name</th>
-                    <th>Bill Amount (₦)</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {formData?.bills.map((item, index) => (
-                    <tr
-                      key={index}
-                      className={index % 2 === 1 ? "odd-table" : "even-table"}
-                    >
-                      <td>{index + 1}</td>
-                      <td>{item.billName}</td>
-                      <td>{item.billAmount}</td>
-                      <td>
-                        <div style={{ display: "flex", gap: "5px" }}>
-                          <BiEdit
-                            className="action-icon"
-                            style={{
-                              fontSize: "20px",
-                              width: "20px",
-                              height: "20px",
-                            }}
-                            onClick={() => {
-                              setEdit(index);
-                              setBill(item);
-                            }}
-                          />
-                          <PiMinusCircleBold
-                            className="action-icon"
-                            style={{
-                              fontSize: "20px",
-                              width: "20px",
-                              height: "20px",
-                            }}
-                            onClick={() => removeBill(index)}
-                          />
-                        </div>
-                      </td>
+              <div className="new-table-style">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Bill Name</th>
+                      <th>Bill Amount (₦)</th>
+                      <th>Actions</th>
                     </tr>
-                  ))}
-                  <tr>
-                    <td colSpan={2}>Total:</td>
-                    <td>₦{getTotalBills}</td>
-                  </tr>
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {formData?.bills.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.billName}</td>
+                        <td>₦{formatAmount(item.billAmount)}</td>
+                        <td>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "5px",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <BiEdit
+                              className="action-icon"
+                              style={{
+                                fontSize: "20px",
+                                width: "17px",
+                                height: "17px",
+                              }}
+                              onClick={() => {
+                                setEdit(index);
+                                setBill(item);
+                              }}
+                            />
+                            <PiMinusCircleBold
+                              className="action-icon"
+                              style={{
+                                fontSize: "20px",
+                                width: "17px",
+                                height: "17px",
+                              }}
+                              onClick={() => removeBill(index)}
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    <tr>
+                      <td>Total:</td>
+                      <td>₦{formatAmount(getTotalBills)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             ) : (
               <p>No bills added yet.</p>
             )}
           </div>
           <div>
-            <div className="input-flex">
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
               <CustomTextInput
                 name="bill_name"
                 placeholder="Bill Name"
@@ -233,10 +244,14 @@ const AddTeachersModal = ({
           </div>
         </div>
         {message && <AlertBadge message={message} />}
-        <button onClick={handleAdd}>{isEdit ? "Update" : "Add"}</button>
+        <CustomSmallButton
+          text={isEdit ? "Update Class" : "Add Class"}
+          runFunction={handleAdd}
+          icon={<PiPlusCircleBold className="use-font-style" />}
+        />
       </div>
     </div>
   );
 };
 
-export default AddTeachersModal;
+export default AddClassModal;

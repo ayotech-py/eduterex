@@ -1,0 +1,169 @@
+.result-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  padding: 20px 40px;
+  box-sizing: border-box;
+  font-size: 14px;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.attendance-mark-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+  overflow: auto;
+}
+
+.result-container .student-class {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.list-controller-ui {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.list-controller-ui h3 {
+  padding: 10px 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  text-align: center;
+  font-weight: 500;
+  width: 250px;
+  max-width: 250px;
+  box-sizing: border-box;
+}
+
+.list-controller-ui-icon {
+  font-size: 25px;
+  color: #711a75;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.list-controller-ui-icon:hover {
+  transform: scale(1.2);
+}
+
+.vr-action-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vr-action-container .vr-action-btn {
+  display: flex;
+  gap: 10px;
+}
+
+.vr-card .vr-action-btn {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.vr-card {
+  width: 100%;
+  margin-bottom: 20px;
+  overflow: auto;
+}
+
+.vr-card-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.vr-card-container .vr-left {
+  width: 70%;
+  height: 100%;
+  overflow: auto;
+}
+
+.vr-card-container .vr-right {
+  width: 30%;
+  background-color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.vr-card-container h3 {
+  font-weight: 600;
+  line-height: 1.5;
+  /* text-align: center; */
+}
+
+.vr-card-container p,
+.vr-card-container h4 {
+  font-size: 14px;
+  line-height: 2;
+}
+
+.chart-center-text p {
+  font-size: 11px !important;
+}
+
+@media (max-width: 768px) {
+  .result-container {
+    padding: 25px 10px;
+  }
+
+  .result-table th,
+  .result-table td {
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  .list-controller-ui h3 {
+    font-size: 16px;
+  }
+
+  .vr-action-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .vr-card-container {
+    flex-direction: column-reverse;
+  }
+
+  .vr-card-container .vr-left {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .vr-card-container .vr-right {
+    width: 100%;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .vr-card-container {
+    height: auto;
+    overflow: visible;
+  }
+
+  .list-controller-ui h3 {
+    font-size: 13px !important;
+    max-width: 90vw;
+  }
+
+  .list-controller-ui h3 {
+    padding: 8px 15px;
+  }
+}

@@ -1,0 +1,98 @@
+.registration-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px;
+  box-sizing: border-box;
+  gap: 20px;
+}
+
+.registration-page {
+  display: flex;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.registration-page .staff-registration {
+  width: 50%;
+  display: grid;
+  grid-template-rows: 25% 60% 15%;
+  color: white;
+  border-right: 1px solid #711a75;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+.registration-page .student-registration {
+  width: 50%;
+  display: grid;
+  grid-template-rows: 25% 60% 15%;
+  color: white;
+  padding-left: 20px;
+  box-sizing: border-box;
+}
+
+.registration-page .staff-registration .top-section,
+.registration-page .student-registration .top-section {
+  border-bottom: 1px solid #711a75;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.registration-page .staff-registration .bottom-section,
+.registration-page .student-registration .bottom-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: auto;
+}
+
+.registration-type {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.r-show-view {
+  display: grid;
+}
+
+.r-hide-view {
+  display: grid;
+}
+
+@media screen and (max-width: 850px) {
+  .registration-container {
+    padding: 20px 10px;
+  }
+
+  .r-show-view {
+    display: grid;
+    transition: all 0.5s ease;
+  }
+
+  .r-hide-view {
+    display: none !important;
+    transition: all 0.5s ease;
+  }
+
+  .registration-page .staff-registration,
+  .registration-page .student-registration {
+    width: 100%;
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+
+  .registration-type {
+    display: flex;
+  }
+}

@@ -5,22 +5,27 @@
   width: 100%;
 }
 
+.custom-input-form-container textarea {
+  min-height: max-content;
+  height: max-content;
+}
+
 .custom-input-form-container input,
-.custom-input-form-container select {
+.custom-input-form-container select,
+.custom-input-form-container textarea {
+  background-color: transparent;
+  padding: 10px 5px 10px 5px;
+  border: none;
+  border-bottom: 1px solid #925fe2;
   width: 100%;
-  padding: 10px;
-  padding-left: 40px; /* Adjust padding to make space for the icon */
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box;
-  font-size: 16px;
+  color: black;
+  flex: 1;
 }
 
 .custom-input-form-container input:focus,
-.custom-input-form-container select:focus {
-  border-color: #007bff;
+.custom-input-form-container select:focus,
+.custom-input-form-container textarea:focus {
   outline: none;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 .custom-input-form-container .form-icons {
@@ -38,7 +43,8 @@
 
 @media screen and (max-width: 650px) {
   .custom-input-form-container input,
-  .custom-input-form-container select {
+  .custom-input-form-container select,
+  .custom-input-form-container textarea {
     font-size: 14px;
   }
 }

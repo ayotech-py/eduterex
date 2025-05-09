@@ -1,7 +1,7 @@
 import React from "react";
 import { FaCheck } from "react-icons/fa";
 
-export const UseProgressIcon = ({ step, currentStep }) => {
+export const UseProgressIcon = ({ step, currentStep, setCurrentStep }) => {
   if (step === currentStep) {
     return (
       <div className="icon-container">
@@ -10,7 +10,11 @@ export const UseProgressIcon = ({ step, currentStep }) => {
     );
   } else if (step < currentStep) {
     return (
-      <div className="icon-container">
+      <div
+        onClick={() => setCurrentStep(step)}
+        className="icon-container"
+        style={{ cursor: "pointer" }}
+      >
         <FaCheck className="icon-checkmark" />
       </div>
     );

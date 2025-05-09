@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: linear-gradient(135deg, #d4b8ff, #f3e8ff, #925fe2);
+  background: linear-gradient(135deg, #d4b8ff, #f3e8ff, #ffadbc);
   padding-left: 10%;
   padding-right: 10%;
 }
@@ -90,14 +90,14 @@
 }
 
 .signup-form {
-  width: 40%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   gap: 25px;
-  margin-bottom: 50px;
-  justify-content: center;
-  padding-left: 30%;
-  padding-right: 30%;
+  padding-left: 25%;
+  padding-right: 25%;
+  height: 100%;
+  overflow: auto;
 }
 
 .signup-form .input-form-container input,
@@ -120,10 +120,21 @@
 .signup-form .input-form-container {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
-.signup-form .form-icons {
+.signup-form .form-icons,
+.signup-form .form-verify {
   position: absolute;
+}
+
+.signup-form .form-verify {
+  right: 0;
+}
+
+.signup-form .form-verify button {
+  font-size: 12px;
+  max-width: 120px;
 }
 
 .signup-form .form-icons .icons {
@@ -191,7 +202,7 @@
 }
 
 .btn-container button {
-  background-color: #925fe2;
+  background-color: #711a75;
   color: white;
   padding: 15px 20px;
   border: none;
@@ -201,14 +212,13 @@
   font-size: 16px;
 }
 
-.btn-container button:hover {
-  background-color: #f3e8ff;
-  color: #925fe2;
-}
-
 .animation-container {
   width: 100%;
   height: 70%;
+}
+
+.onboarding-plan .plan-subcontainer {
+  overflow: auto;
 }
 
 .plan-container {
@@ -217,22 +227,30 @@
   justify-content: center;
   align-items: center;
   gap: 20px;
+  height: 100%;
 }
 
 .plan-container .plan-subcontainer {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
+  gap: 20px;
+  padding: 0px 5%;
+  box-sizing: border-box;
 }
 
 .plan-container .plan-card {
+  width: 50%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  align-items: flex-start;
+  text-align: left;
   gap: 15px;
   border-radius: 20px;
+  box-sizing: border-box;
+}
+
+.plan-container .plan-card img {
+  width: 100%;
+  object-fit: cover;
 }
 
 .plan-container .plan-card .amount-flex {
@@ -247,6 +265,7 @@
 }
 
 .plan-container .plan-card .circle-check {
+  min-width: 20px;
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -259,11 +278,16 @@
   font-size: 13px;
 }
 
+.onboarding-plan .plan-item-container {
+  overflow: auto;
+}
+
 .plan-container .plan-card .plan-item-container {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+  text-align: left;
 }
 
 .plan-container .plan-card .plan-item {
@@ -275,15 +299,18 @@
 .preferences-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   gap: 25px;
+  height: 100%;
+  overflow: auto;
+  width: 100%;
 }
 
 .preferences-container .preferences {
   width: 70%;
   display: flex;
-  height: 53vh;
+  height: 100%;
+  max-height: 75%;
 }
 
 .preferences-container .preferences .aside {
@@ -297,6 +324,7 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 30px;
+  box-sizing: border-box;
 }
 
 .preferences-container .preferences .aside h3 {
@@ -312,8 +340,9 @@
   padding: 20px 30px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: 20px;
+  box-sizing: border-box;
+  height: 100%;
 }
 
 .preference-item {
@@ -330,6 +359,7 @@
   gap: 5px;
   border-bottom: 1px solid #925fe2;
   padding-bottom: 10px;
+  box-sizing: border-box;
 }
 
 .preferences-container .aside .preference-item p {
@@ -337,24 +367,12 @@
   font-weight: 300;
 }
 
-.no-record-yet {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 15px;
-  height: 100%;
-}
-
-.no-record-icon {
-  font-size: 150px;
-}
-
 .preferences-container .list-parent {
-  height: 90%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 20px;
+  overflow: auto;
 }
 
 .preferences-container .preferences-footer {
@@ -362,7 +380,6 @@
   justify-content: space-between;
   align-items: flex-end;
   gap: 20px;
-  height: 15%;
 }
 
 .preferences-container .preferences-footer p {
@@ -375,11 +392,9 @@
 }
 
 .preferences-container .list-container {
-  display: grid;
-  grid-template-columns: 31% 31% 31%;
   gap: 20px;
   overflow: auto;
-  max-height: 300px;
+  height: 100%;
 }
 
 .preferences-container .list-container::-webkit-scrollbar {
@@ -459,6 +474,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  height: 100%;
 }
 
 .confirmation-container .confirmation-grid {
@@ -469,7 +485,7 @@
   grid-auto-flow: dense;
   grid-gap: 20px;
   overflow: auto;
-  max-height: 500px;
+  max-height: 100%;
 }
 
 .confirmation-container .confirmation-grid .confirmation-item {
@@ -531,9 +547,10 @@
 }
 
 .display-image img {
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .confirmation-container
@@ -546,29 +563,56 @@
   line-height: 30px;
 }
 
-table {
-  width: 100%;
-  text-align: left;
-  border-collapse: collapse;
-  border: 1px solid #ddd;
+.poweredby-tag {
+  display: block;
+  position: absolute;
+  top: 50px;
+  left: 50px;
 }
 
-table td,
-table th {
-  padding: 5px 10px;
+.poweredby-tag-mobile {
+  display: none;
 }
 
-table tr:hover {
-  background-color: #e6f7ff;
-  cursor: pointer;
-}
+@media screen and (max-width: 1450px) {
+  .onboarding-container {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
 
-.odd-table {
-  background-color: #f9f9f9;
-}
+  .progress-container .title {
+    display: none;
+  }
 
-.even-table {
-  background-color: #fff;
+  .signup-form {
+    width: 100%;
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+  }
+
+  .onboarding-title {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+
+  .preferences-container .preferences {
+    width: 100%;
+  }
+
+  .signup-form .form-flex {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .signup-form .form-flex .input-form-container {
+    width: 100% !important;
+  }
+
+  .signup-form .form-verify button {
+    font-size: 12px;
+    max-width: 160px;
+  }
 }
 
 @media screen and (max-width: 900px) {
@@ -611,10 +655,6 @@ table tr:hover {
 
   .preferences-container .preferences-footer .btn-container {
     width: 20%;
-  }
-
-  .preferences-container .list-container {
-    height: 70%;
   }
 
   .preferences-container .list-container::-webkit-scrollbar {
@@ -719,13 +759,12 @@ table tr:hover {
   }
 
   .plan-container .plan-subcontainer {
-    display: flex;
     flex-direction: column;
-    overflow: auto;
-    max-height: 550px;
     gap: 15px;
     align-items: flex-start;
     justify-content: flex-start;
+    padding: 0px 10px;
+    box-sizing: border-box;
   }
 
   .preferences-container .preferences .aside {
@@ -753,36 +792,20 @@ table tr:hover {
   }
 
   .onboarding-title h3 {
-    font-size: 18px;
-  }
-}
-
-@media screen and (max-width: 1450px) {
-  .onboarding-container {
-    padding-left: 5%;
-    padding-right: 5%;
+    font-size: 17px;
   }
 
-  .progress-container .title {
+  .poweredby-tag-mobile {
+    display: flex;
+    top: 5px;
+    left: 5px;
+  }
+
+  .poweredby-tag {
     display: none;
   }
 
-  .confirmation-container .confirmation-grid {
-    max-height: 500px;
-  }
-
-  .signup-form {
-    width: 100%;
-    padding-left: 2.5%;
-    padding-right: 2.5%;
-  }
-
-  .onboarding-title {
-    margin-left: 5%;
-    margin-right: 5%;
-  }
-
-  .preferences-container .preferences {
+  .plan-container .plan-card {
     width: 100%;
   }
 }

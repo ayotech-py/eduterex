@@ -1,0 +1,35 @@
+.bill-management-container {
+  font-family: Arial, sans-serif;
+}
+
+.bill-management-container .card {
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.bill-management-container .form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bill-management-container input {
+  border-radius: 5px;
+}
+
+.bill-management-container button {
+  width: 100px;
+  min-width: 100px;
+}
+
+.bill-management-container .bill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 5px;
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

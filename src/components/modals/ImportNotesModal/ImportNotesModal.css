@@ -1,0 +1,90 @@
+.import-questions {
+  width: 70%;
+  height: 75vh;
+}
+
+.import-questions .modal-sub-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 0px;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.import-questions .modal-sub-container .import-lesson-type {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0px 15px;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
+}
+
+.import-questions .modal-sub-container .lesson-note-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0px 15px;
+  box-sizing: border-box;
+  width: 70%;
+  border-left: 2px solid #711a75;
+  height: 100%;
+}
+
+.view-lesson-div {
+  height: 100%;
+}
+
+.render-lessons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media screen and (max-width: 850px) {
+  .import-questions {
+    width: 80% !important;
+    height: 75vh;
+    padding: 5px 15px 15px 15px;
+    gap: 15px;
+  }
+
+  .import-questions .modal-sub-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .import-questions .modal-sub-container .import-lesson-type {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0px;
+    box-sizing: border-box;
+  }
+
+  .import-questions .modal-sub-container .lesson-note-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0px 0px;
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+  }
+
+  .import-questions .modal-sub-container .choose-question-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0px 0px;
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+  }
+}

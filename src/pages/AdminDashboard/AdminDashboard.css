@@ -1,0 +1,236 @@
+.dashboard-container {
+  display: flex;
+  padding: 30px;
+  gap: 15px;
+  box-sizing: border-box;
+  overflow: auto;
+  width: 100%;
+}
+
+.dashboard-main {
+  width: 75%;
+}
+
+.dashboard-aside {
+  width: 25%;
+}
+
+.dashboard-main,
+.dashboard-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Common Card Styles */
+.d-card,
+.d-card-dark,
+.d-tuition-chart,
+.d-student-chart,
+.d-attendance-chart {
+  padding: 15px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.d-card,
+.d-card-dark {
+  height: 100%;
+  line-height: 1.5;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Card Variants */
+.d-card {
+  background-color: #ffadbc;
+}
+
+.d-card-dark {
+  background-color: #711a75;
+  color: #fff;
+}
+
+/* Common Card Icon Styles */
+.d-card-icon,
+.d-card-icon-dark {
+  font-size: 14px;
+  border-radius: 50%;
+  width: 35px;
+  min-width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.d-card-icon {
+  background-color: #711a75;
+  color: #fff;
+}
+
+.d-card-icon-dark {
+  background-color: #f3e8ff;
+  color: #711a75;
+}
+
+/* Top and Middle Card Layouts */
+.d-top-cards,
+.d-middle-cards {
+  display: flex;
+  gap: 15px;
+  box-sizing: border-box;
+}
+
+/* Chart Section */
+.d-student-chart {
+  width: 35%;
+  background-color: #fff;
+  padding: 20px;
+}
+
+.d-attendance-chart {
+  width: 65%;
+  background-color: #fff;
+  padding: 20px;
+}
+
+/* Chart Headers */
+.d-student-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.d-student-chart-header p {
+  font-weight: 600;
+}
+
+/* Tuition Chart */
+.d-tuition-chart {
+  background-color: #fff;
+}
+
+/* Text Styles */
+.d-card h3,
+.d-card-dark h3 {
+  font-weight: 600;
+  font-size: 30px;
+}
+
+/* Medium Screens (851px - 1300px) */
+@media screen and (min-width: 851px) and (max-width: 1300px) {
+  .dashboard-container {
+    padding: 25px 20px;
+    gap: 20px;
+    height: auto;
+    overflow: hidden;
+  }
+
+  .dashboard-main,
+  .dashboard-aside {
+    width: 75%;
+    gap: 20px;
+  }
+
+  .dashboard-aside {
+    width: 25%;
+  }
+
+  .d-top-cards,
+  .d-middle-cards {
+    gap: 20px;
+  }
+
+  .d-middle-cards {
+    flex-direction: column;
+  }
+
+  .d-card,
+  .d-card-dark {
+    padding: 20px;
+  }
+
+  .d-card-icon,
+  .d-card-icon-dark {
+    font-size: 15px;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+  }
+
+  .d-card h3,
+  .d-card-dark h3 {
+    font-size: 25px;
+  }
+
+  .d-student-chart,
+  .d-attendance-chart {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .bottom-part {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+/* Small Screens (850px and below) */
+@media screen and (max-width: 850px) {
+  .dashboard-container {
+    flex-direction: column;
+    padding: 15px 10px;
+    gap: 20px;
+    height: auto;
+    overflow: hidden;
+  }
+
+  .dashboard-main,
+  .dashboard-aside {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .d-top-cards {
+    display: grid;
+    grid-template-columns: calc(50% - 5px) calc(50% - 5px);
+    gap: 10px;
+  }
+
+  .d-middle-cards {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .d-card,
+  .d-card-dark {
+    padding: 20px;
+  }
+
+  .d-card-icon,
+  .d-card-icon-dark {
+    font-size: 15px;
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .d-card h3,
+  .d-card-dark h3 {
+    font-size: 25px;
+  }
+
+  .d-student-chart,
+  .d-attendance-chart {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .bottom-part {
+    display: flex;
+    gap: 10px;
+  }
+}

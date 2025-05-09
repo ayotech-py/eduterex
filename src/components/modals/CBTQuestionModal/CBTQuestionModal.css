@@ -1,0 +1,58 @@
+.cbt-assignment {
+  width: 50%;
+}
+
+.use-sub-container .modal-sub-container {
+  gap: 20px !important;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.cbt-question-checker-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cbt-question-checker {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.attempted-question {
+  background-color: #711a75;
+  color: #fff;
+}
+
+.unattempted-question {
+  background-color: #fff;
+  color: #711a75;
+  border: 1px solid #711a75;
+}
+
+.cbt-action-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+@media screen and (max-width: 850px) {
+  .cbt-assignment {
+    width: 80% !important;
+  }
+
+  .cbt-question-checker {
+    width: 25px;
+    height: 25px;
+  }
+
+  .cbt-question-checker p {
+    font-size: 11px !important;
+  }
+}

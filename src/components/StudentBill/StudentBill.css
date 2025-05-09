@@ -1,0 +1,192 @@
+.sb-bill-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.sb-bill-container > * {
+  flex: 1; /* Let all children grow evenly to fill available space */
+  min-width: 0; /* Prevent children from exceeding parent's width */
+  box-sizing: border-box;
+}
+
+.sb-bill-content .sb-student-profile {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  text-align: left;
+}
+
+.sb-school-profile h3 {
+  text-align: left;
+}
+
+.sb-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 100%; /* Ensure full width */
+}
+
+.sb-bill-container .sb-heading h3 {
+  font-size: 25px;
+  color: #711a75;
+}
+
+.sb-bill-container .sb-left {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0; /* Prevent content overflow */
+  gap: 10px;
+}
+
+.sb-right {
+  background-color: #711a75;
+  padding: 8px 30px;
+  color: #fff;
+  flex: 0 1 auto; /* Allow it to shrink or grow as needed */
+  text-align: center;
+  min-width: 100px;
+}
+
+.sb-left img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.sb-bill-content {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.school-contact-div {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.school-contact-div span,
+.school-contact-div p {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.school-signatory {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 150px;
+  box-sizing: border-box;
+  flex: 1; /* Let it grow and shrink as needed */
+}
+
+.signature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.signatory-line {
+  height: 2px;
+  width: 220px;
+  background-color: #000;
+}
+
+.bold-text {
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .sb-bill-container {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .sb-bill-container .sb-heading h3 {
+    font-size: 10px;
+    color: #711a75;
+  }
+
+  .sb-right {
+    padding: 5px 20px;
+    min-width: 60px;
+  }
+
+  .sb-right p {
+    font-size: 8px !important;
+  }
+
+  .sb-bill-container .sb-left {
+    gap: 5px;
+  }
+
+  .sb-left img {
+    width: 20px;
+    height: 20px;
+    object-fit: cover;
+  }
+
+  .sb-bill-content .sb-student-profile h4,
+  .sb-bill-content .sb-student-profile p {
+    font-size: 8px !important;
+    line-height: 1.5;
+  }
+
+  .sb-bill-content .new-table-style {
+    margin-top: 5px;
+    margin-bottom: 0px;
+  }
+
+  .sb-bill-content .new-table-style th,
+  .sb-bill-content .new-table-style td,
+  .sb-bill-content .new-table-style tr {
+    font-size: 8px !important;
+    padding: 5px !important;
+  }
+
+  .vr-card {
+    margin-bottom: 10px;
+    overflow: visible;
+  }
+
+  .sb-bill-content {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .school-contact-div {
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .school-contact-div span,
+  .school-contact-div p {
+    font-size: 8px !important;
+  }
+
+  .school-signatory {
+    height: 70px;
+  }
+
+  .school-signatory p {
+    font-size: 8px !important;
+  }
+
+  .signature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .signatory-line {
+    height: 1px;
+    width: 100px;
+    background-color: #000;
+  }
+}

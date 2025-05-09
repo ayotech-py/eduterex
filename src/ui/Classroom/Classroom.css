@@ -1,0 +1,151 @@
+.ui-classroom {
+  display: grid;
+  grid-template-columns: 30% calc(70% - 15px);
+  justify-content: space-between;
+  gap: 15px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.ui-classroom .classroom-div {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+}
+
+.ui-classroom .ui-classroom-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #711a75;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.ui-classroom .ui-classroom-heading h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ui-classroom-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 100%;
+  overflow: auto;
+  margin: 15px 0;
+}
+
+.ui-classroom-content .scheme-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f3e8ff;
+  border-radius: 10px;
+  padding: 10px 15px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.ui-classroom-content .scheme-selected {
+  border: 1px solid #711a75;
+  transition: 0.5s ease-in-out;
+}
+
+.ui-classroom-content .scheme-list span {
+  font-weight: 500;
+}
+
+.ui-classroom .scheme-list-action {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  min-width: 30px;
+}
+
+.ui-classroom .action-icon {
+  padding: 5px;
+}
+
+.ui-classroom .action-icon:hover {
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+.ui-classroom .ui-subheading {
+  padding: 15px 0;
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+.ui-classroom .ui-subheading span {
+  font-weight: 600;
+}
+
+.ui-classroom .lessons .ui-classroom-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 0px;
+}
+
+.show-in-mobile {
+  display: flex;
+}
+
+.hide-in-mobile {
+  display: flex;
+}
+
+.ui-show-lessons {
+  display: flex !important;
+}
+
+.mobile-ui-show {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .ui-classroom {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+  .mobile-ui-show {
+    display: flex !important;
+  }
+
+  .ui-classroom .ui-classroom-heading h3 {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .show-in-mobile {
+    display: flex !important;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.3s ease-in-out,
+      transform 0.3s ease-in-out;
+    visibility: visible;
+  }
+
+  .hide-in-mobile {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition:
+      opacity 0.3s ease-in-out,
+      transform 0.3s ease-in-out;
+    pointer-events: none;
+    visibility: hidden; /* Hide but allow transition */
+    position: fixed; /* Prevent layout shift */
+  }
+
+  .ui-classroom .lessons .ui-classroom-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -1,0 +1,49 @@
+.question-setup-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.exam-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px 40px;
+  box-sizing: border-box;
+  font-size: 14px;
+  height: 100%;
+}
+
+.exam-question-container {
+  width: 100% !important;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  height: 100% !important;
+}
+
+.exam-manager .vc-action-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .exam-question-container {
+    padding: 0px 0px 0px 0px;
+    gap: 10px !important;
+  }
+
+  .exam-manager .vc-action .action-name {
+    min-width: max-content;
+    padding: 5px 30px;
+  }
+
+  .exam-manager {
+    padding: 20px 20px;
+  }
+
+  .exam-manager .choose-question-section {
+    gap: 10px !important;
+  }
+}

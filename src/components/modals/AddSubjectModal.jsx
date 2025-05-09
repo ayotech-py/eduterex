@@ -4,6 +4,8 @@ import CustomTextInput from "../CustomTextInput/CustomTextInput";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import { AlertBadge } from "../AlertBadge";
 import { MdClose } from "react-icons/md";
+import CustomSmallButton from "../Buttons/CustomSmallButton";
+import { PiPlusCircleBold } from "react-icons/pi";
 
 const AddSubjectModal = ({
   isVisible,
@@ -25,17 +27,18 @@ const AddSubjectModal = ({
   const [message, setMessage] = useState("");
 
   const handleAdd = () => {
+    setMessage("");
     setAlert(false);
     if (subjectName) {
-      if (subjectList.includes(subjectName)) {
-        setMessage("A subject with this title already exist.");
-        setAlert(true);
-        return;
+      if (isEdit) {
+        subjectList[isEdit - 1] = subjectName;
+        setSubjectList([...subjectList]);
+        clearForm();
       } else {
-        if (isEdit) {
-          subjectList[isEdit - 1] = subjectName;
-          setSubjectList([...subjectList]);
-          clearForm();
+        if (subjectList.includes(subjectName)) {
+          setMessage("A subject with this title already exist.");
+          setAlert(true);
+          return;
         } else {
           setSubjectList((prevData) => [...prevData, subjectName]);
           clearForm();
@@ -56,23 +59,20 @@ const AddSubjectModal = ({
   if (!isVisible) return null;
 
   return (
-    <div
-      className="modal-overlay"
-      onClick={() => {
-        onClose();
-        clearForm();
-      }}
-    >
+    <div className="modal-overlay">
       <div
         className="modal-content"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
       >
-        <div>
+        <div
+          style={{ textAlign: "center" }}
+          className="modal-heading-container"
+        >
           <h2>Create Subject</h2>
           <p>Please enter the name of the class.</p>
         </div>
         <MdClose className="close-modal" onClick={onClose} />
-        <div className="teacher-profile">
+        <div className="modal-sub-container overflow">
           <CustomTextInput
             name={"subject"}
             placeholder={"Subject Title"}
@@ -81,8 +81,12 @@ const AddSubjectModal = ({
             icon={<AiOutlineUsergroupAdd className="icons" />}
           />
         </div>
-        {alert && <AlertBadge message={message} />}
-        <button onClick={handleAdd}>{isEdit ? "Update" : "Add"}</button>
+        {message && <AlertBadge message={message} />}
+        <CustomSmallButton
+          text={isEdit ? "Update subject" : "Add subject"}
+          runFunction={handleAdd}
+          icon={<PiPlusCircleBold className="use-font-style" />}
+        />
       </div>
     </div>
   );

@@ -1,0 +1,60 @@
+.ui-questionbank {
+  gap: 20px;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ui-questionbank-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ui-questionbank-content {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  flex-direction: column;
+  gap: 15px;
+  height: 100%;
+  overflow: auto;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.list-question-container {
+  display: flex;
+  gap: 5px;
+  background-color: #f3e8ff;
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.list-question-index {
+  min-width: 15px;
+}
+
+.list-question-container p span {
+  font-weight: 600;
+}
+
+.list-questions,
+.list-questions-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list-question-container button {
+  border: none;
+}
+
+@media screen and (max-width: 850px) {
+  .ui-questionbank-content {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

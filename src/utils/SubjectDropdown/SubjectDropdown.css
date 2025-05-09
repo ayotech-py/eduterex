@@ -2,18 +2,16 @@
 .dropdown-container {
   display: flex;
   width: 100%;
-  overflow: auto;
-  height: 320px;
-  max-height: 320px;
   justify-content: space-between;
 }
 
 .dropdown-flex {
-  width: 48%;
+  width: 100%;
 }
 
 .dropdown-btn {
   display: flex;
+  justify-content: column;
   align-items: center;
   border-bottom: 1px solid #711a75;
 }
@@ -72,29 +70,6 @@
 
 .checkbox-label input:checked {
   background-color: #4caf50;
-}
-
-/* Customize the scrollbar track (background of the scrollbar) */
-.overflow::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
-}
-
-/* Style the scrollbar track */
-.overflow::-webkit-scrollbar-track {
-  background-color: #f1f1f1; /* Light gray background for the track */
-  border-radius: 10px; /* Optional: adds rounded corners to the track */
-}
-
-/* Style the scrollbar thumb (the draggable part) */
-.overflow::-webkit-scrollbar-thumb {
-  background-color: #888; /* Dark gray thumb */
-  border-radius: 10px; /* Optional: adds rounded corners to the thumb */
-  border: 2px solid #f1f1f1; /* Optional: adds a border around the thumb */
-}
-
-/* Hover effect for the scrollbar thumb */
-.overflow::-webkit-scrollbar-thumb:hover {
-  background-color: #555; /* Darker gray when hovered */
 }
 
 @media screen and (max-width: 650px) {

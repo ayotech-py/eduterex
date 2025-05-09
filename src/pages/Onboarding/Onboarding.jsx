@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./Onboarding.css";
-import _ from "lodash";
+import _, { set } from "lodash";
 import { MdOutlineSchool } from "react-icons/md";
 import {
   HiOutlineClipboardList,
@@ -20,7 +20,7 @@ import nigeriaStates from "../../utils/nigeria-state-and-lgas.json"; // Import J
 import { motion, AnimatePresence } from "framer-motion";
 import { UseProgressIcon } from "../../components/UseProgressIcon";
 import AddClassModal from "../../components/modals/AddClassModal/AddClassModal";
-import ListItem from "../../components/ListItem/ListItem";
+import ListItemOnboarding from "../../components/ListItem/ListItemOnboarding";
 import SubjectDropdown from "../../utils/SubjectDropdown/SubjectDropdown";
 import result_1 from "../../images/result_template/result_1.jpg";
 import result_2 from "../../images/result_template/result_2.jpg";
@@ -34,8 +34,33 @@ import AddSubjectModal from "../../components/modals/AddSubjectModal";
 import CustomTextInput from "../../components/CustomTextInput/CustomTextInput";
 import CustomSelectionInput from "../../components/CustomSelectionInput/CustomSelectionInput";
 import { AiFillCalendar } from "react-icons/ai";
+import AlertModal from "../../components/modals/AlertModal/AlertModal";
+import CustomSmallButton from "../../components/Buttons/CustomSmallButton";
+import Loading from "../../utils/Loader";
+import {
+  PiArrowRightBold,
+  PiCameraBold,
+  PiCameraPlusFill,
+  PiCheckCircleBold,
+  PiPlusCircleBold,
+} from "react-icons/pi";
+import { allowedImageTypes, compressImage } from "../../utils/Utils";
+import { formatAmount } from "../../components/FormatAmount";
+import VerifyEmailModal from "../../components/modals/VerifyEmailModal";
+import { getOTP } from "../../services/authService";
+import PoweredBy from "../../components/PoweredBy";
+import priceCalculatorImg from "../../images/price-calculator.png";
+import { BiCamera } from "react-icons/bi";
 
-const SchoolProfile = ({ onNext, setOnboardingForm }) => {
+const apiUrl = process.env.REACT_APP_BASE_URL;
+const apiKey = process.env.REACT_APP_API_KEY;
+
+const SchoolProfile = ({
+  onNext,
+  currentStep,
+  setOnboardingForm,
+  onboardingForm,
+}) => {
   const [formData, setFormData] = useState({
     school_name: "",
     address: "",
@@ -45,13 +70,18 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
     contact_email: "",
     contact_phone: "",
     school_logo: null,
+    email_verified: false,
   });
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handleOpenModal = () => setIsModalVisible(true);
+  const handleCloseModal = () => setIsModalVisible(false);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     setFormData({
       ...formData,
-      [name]: files ? files[0] : value,
+      [name]: files ? files[0] : name.includes("email") ? value.trim() : value,
     });
   };
 
@@ -61,7 +91,6 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
   });
 
   const handleStateChange = (e) => {
-    console.log("selected state", e.target.value);
     setLocation({
       ...location,
       selectedState: e.target.value,
@@ -90,8 +119,13 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
   useEffect(() => {
     const fileInput = document.getElementById("fileInput");
 
-    const handleFileChange = (e) => {
-      const file = e.target.files[0];
+    const handleFileChange = async (e) => {
+      const uploaded_file = e.target.files[0];
+      if (!allowedImageTypes.includes(uploaded_file?.type)) {
+        setMessage("Only PNG or JPEG images are allowed.");
+        return;
+      }
+      const file = await compressImage(e.target.files[0]);
       if (file) {
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -115,9 +149,14 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
   const [alert, setAlert] = useState(false);
   const [message, setMessage] = useState("");
 
-  const handleNext = () => {
-    setAlert(false);
+  const handleNext = (e) => {
+    e.preventDefault();
+    if (!formData.email_verified) {
+      setMessage("Please verify your email address.");
+      return;
+    }
     if (isFormValid(formData, setMessage)) {
+      setMessage("");
       setOnboardingForm((prevData) => ({
         ...prevData,
         schoolProfile: formData,
@@ -126,6 +165,52 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
     } else {
       setAlert(true);
     }
+  };
+
+  useEffect(() => {
+    if (onboardingForm.schoolProfile) {
+      setFormData((prevData) => ({
+        ...prevData,
+        ...onboardingForm.schoolProfile,
+      }));
+      setLogoImage(onboardingForm.schoolProfile.school_logo);
+      setLocation({
+        selectedState: onboardingForm.schoolProfile.state,
+        selectedLGA: onboardingForm.schoolProfile.lga,
+      });
+    }
+  }, [currentStep]);
+
+  const [loading, setLoading] = useState(false);
+  const [receivedOTP, setReceivedOTP] = useState("");
+
+  const openEmailVerificationModal = async () => {
+    setMessage("");
+    setLoading(true);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.contact_email)) {
+      setMessage("Please enter a valid email address.");
+      setLoading(false);
+      return;
+    }
+    try {
+      const response = await getOTP({ email: formData.contact_email });
+      setLoading(false);
+
+      if (response.success) {
+        setReceivedOTP(response.otp);
+        handleOpenModal();
+      } else {
+        setMessage(response.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      setMessage("An error occurred while sending otp.");
+    }
+  };
+
+  const emailVerify = () => {
+    setFormData((prev) => ({ ...prev, email_verified: true }));
   };
 
   return (
@@ -137,7 +222,7 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
           tailor your experience.
         </p>
       </div>
-      {alert && <AlertBadge message={message} />}
+      {message && <AlertBadge message={message} />}
       <div style={{ display: "flex", justifyContent: "center" }}>
         <div className="image-upload">
           <input
@@ -148,7 +233,7 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
           />
           <label htmlFor="fileInput" id="imageBox">
             <span className={logoImage ? "hid-image" : "show-image"}>
-              Click to upload logo image
+              <PiCameraBold size={50} color="#711a75" className="camera-icon" />
             </span>
             {logoImage && (
               <img
@@ -176,18 +261,6 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
       <div className="input-form-container">
         <input
           type="text"
-          name="address"
-          value={formData.address}
-          onChange={handleChange}
-          placeholder="Address"
-        />
-        <div className="form-icons">
-          <HiOutlineLocationMarker className="icons" />
-        </div>
-      </div>
-      <div className="input-form-container">
-        <input
-          type="text"
           name="motto"
           value={formData.motto}
           onChange={handleChange}
@@ -198,7 +271,7 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
         </div>
       </div>
       <div className="form-flex">
-        <div className="input-form-container" style={{ width: "45%" }}>
+        <div className="input-form-container" style={{ width: "47%" }}>
           <select
             name="state"
             value={location.selectedState}
@@ -217,7 +290,7 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
         </div>
 
         {/* LGA Dropdown */}
-        <div className="input-form-container" style={{ width: "45%" }}>
+        <div className="input-form-container" style={{ width: "47%" }}>
           <select
             name="lga"
             value={location.selectedLGA}
@@ -237,20 +310,51 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
           </div>
         </div>
       </div>
+      <div className="input-form-container">
+        <input
+          type="text"
+          name="address"
+          value={formData.address}
+          onChange={handleChange}
+          placeholder="Address"
+        />
+        <div className="form-icons">
+          <HiOutlineLocationMarker className="icons" />
+        </div>
+      </div>
       <div className="form-flex">
-        <div className="input-form-container" style={{ width: "45%" }}>
+        <div className="input-form-container" style={{ width: "47%" }}>
           <input
             type="email"
             name="contact_email"
             value={formData.contact_email}
-            onChange={handleChange}
+            onChange={(e) => {
+              handleChange(e);
+              setFormData((prev) => ({ ...prev, email_verified: false }));
+            }}
             placeholder="Contact Email"
+            style={{ paddingRight: "100px" }}
           />
           <div className="form-icons">
             <FiMail className="icons" />
           </div>
+          <div className="form-verify no-width">
+            <CustomSmallButton
+              text={
+                loading ? (
+                  <Loading />
+                ) : formData.email_verified ? (
+                  "Email Verified"
+                ) : (
+                  "Verify Email"
+                )
+              }
+              runFunction={openEmailVerificationModal}
+              disabled={formData.email_verified || loading}
+            />
+          </div>
         </div>
-        <div className="input-form-container" style={{ width: "45%" }}>
+        <div className="input-form-container" style={{ width: "47%" }}>
           <input
             type="tel"
             name="contact_phone"
@@ -263,29 +367,50 @@ const SchoolProfile = ({ onNext, setOnboardingForm }) => {
           </div>
         </div>
       </div>
-      <div className="btn-container">
-        <button onClick={handleNext} className="btn">
-          Next
-        </button>
+      <div className="next-btn">
+        <CustomSmallButton
+          text={"Next"}
+          runFunction={handleNext}
+          icon={<PiArrowRightBold className="use-font-style" />}
+        />
       </div>
+      <VerifyEmailModal
+        isVisible={isModalVisible && receivedOTP}
+        onClose={handleCloseModal}
+        setEmailVerified={emailVerify}
+        email={formData.contact_email}
+        receivedOTP={receivedOTP}
+      />
     </section>
   );
 };
 
-const AdminForm = ({ onNext, setOnboardingForm }) => {
+const AdminForm = ({
+  onNext,
+  currentStep,
+  onboardingForm,
+  setOnboardingForm,
+}) => {
   const [formData, setFormData] = useState({
     full_name: "",
     email: "",
     phone: "",
     password: "",
     confirm_password: "",
+    profile_image: null,
+    email_verified: false,
   });
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const handleOpenModal = () => setIsModalVisible(true);
+  const handleCloseModal = () => setIsModalVisible(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: name.includes("email") ? value.trim() : value,
     });
   };
 
@@ -293,7 +418,10 @@ const AdminForm = ({ onNext, setOnboardingForm }) => {
   const [message, setMessage] = useState("");
 
   const handleNext = () => {
-    setAlert(false);
+    if (!formData.email_verified) {
+      setMessage("Please verify your email address.");
+      return;
+    }
     if (isFormValid(formData, setMessage)) {
       setOnboardingForm((prevData) => ({
         ...prevData,
@@ -305,13 +433,110 @@ const AdminForm = ({ onNext, setOnboardingForm }) => {
     }
   };
 
+  useEffect(() => {
+    if (onboardingForm.adminProfile) {
+      setFormData((prevData) => ({
+        ...prevData,
+        ...onboardingForm.adminProfile,
+      }));
+    }
+    setProfileImage(onboardingForm.adminProfile.profile_image);
+  }, [currentStep]);
+
+  const [profileImage, setProfileImage] = useState(null);
+
+  useEffect(() => {
+    const fileInput = document.getElementById("fileInput");
+
+    const handleFileChange = async (e) => {
+      const uploaded_file = e.target.files[0];
+      if (!allowedImageTypes.includes(uploaded_file?.type)) {
+        setMessage("Only PNG or JPEG images are allowed.");
+        return;
+      }
+      const file = await compressImage(e.target.files[0]);
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setProfileImage(reader.result);
+          setFormData((prevData) => ({
+            ...prevData,
+            profile_image: reader.result,
+          }));
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
+    fileInput.addEventListener("change", handleFileChange);
+
+    return () => {
+      fileInput.removeEventListener("change", handleFileChange); // Cleanup event listener
+    };
+  }, []);
+
+  const [loading, setLoading] = useState(false);
+  const [receivedOTP, setReceivedOTP] = useState("");
+
+  const openEmailVerificationModal = async () => {
+    setMessage("");
+    setLoading(true);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setMessage("Please enter a valid email address.");
+      setLoading(false);
+      return;
+    }
+    try {
+      const response = await getOTP({ email: formData.email });
+      setLoading(false);
+
+      if (response.success) {
+        setReceivedOTP(response.otp);
+        handleOpenModal();
+      } else {
+        setMessage(response.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      setMessage(error);
+    }
+  };
+
+  const emailVerify = () => {
+    setFormData((prev) => ({ ...prev, email_verified: true }));
+  };
+
   return (
     <section className="signup-form">
       <div className="onboarding-title">
         <h3>Admin Profile</h3>
         <p>Provide the necessary details to create your admin profile.</p>
       </div>
-      {alert && <AlertBadge message={message} />}
+      {message && <AlertBadge message={message} />}
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div className="image-upload">
+          <input
+            type="file"
+            id="fileInput"
+            className="hidden"
+            accept="image/*"
+          />
+          <label htmlFor="fileInput" id="imageBox">
+            <span className={profileImage ? "hid-image" : "show-image"}>
+              <PiCameraBold size={50} color="#711a75" className="camera-icon" />
+            </span>
+            {profileImage && (
+              <img
+                className="show-image"
+                id="uploadedImage"
+                src={profileImage}
+                alt="Uploaded"
+              />
+            )}
+          </label>
+        </div>
+      </div>
       <div className="input-form-container">
         <input
           type="text"
@@ -331,11 +556,30 @@ const AdminForm = ({ onNext, setOnboardingForm }) => {
           type="email"
           name="email"
           value={formData.email}
-          onChange={handleChange}
+          onChange={(e) => {
+            handleChange(e);
+            setFormData((prev) => ({ ...prev, email_verified: false }));
+          }}
           placeholder="Email Address"
+          style={{ paddingRight: "120px" }}
         />
         <div className="form-icons">
           <FiMail className="icons" />
+        </div>
+        <div className="form-verify no-width">
+          <CustomSmallButton
+            text={
+              loading ? (
+                <Loading />
+              ) : formData.email_verified ? (
+                "Email Verified"
+              ) : (
+                "Verify Email"
+              )
+            }
+            runFunction={openEmailVerificationModal}
+            disabled={formData.email_verified || loading}
+          />
         </div>
       </div>
 
@@ -382,28 +626,57 @@ const AdminForm = ({ onNext, setOnboardingForm }) => {
       </div>
 
       {/* Submit Button */}
-      <div className="btn-container">
-        <button onClick={handleNext} className="btn">
-          Next
-        </button>
+      <div className="next-btn">
+        <CustomSmallButton
+          text={"Next"}
+          runFunction={handleNext}
+          icon={<PiArrowRightBold className="use-font-style" />}
+        />
       </div>
+      <VerifyEmailModal
+        isVisible={isModalVisible && receivedOTP}
+        onClose={handleCloseModal}
+        setEmailVerified={emailVerify}
+        email={formData.email}
+        receivedOTP={receivedOTP}
+      />
     </section>
   );
 };
 
-const ProgressIndicator = ({ currentStep }) => {
+const ProgressIndicator = ({ currentStep, setCurrentStep }) => {
   return (
     <div className="progress-container">
       <div className="progress-indicator">
-        <UseProgressIcon currentStep={currentStep} step={1} />
+        <UseProgressIcon
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          step={1}
+        />
         <div className="x-line"></div>
-        <UseProgressIcon currentStep={currentStep} step={2} />
+        <UseProgressIcon
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          step={2}
+        />
         <div className="x-line"></div>
-        <UseProgressIcon currentStep={currentStep} step={3} />
+        <UseProgressIcon
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          step={3}
+        />
         <div className="x-line"></div>
-        <UseProgressIcon currentStep={currentStep} step={4} />
+        <UseProgressIcon
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          step={4}
+        />
         <div className="x-line"></div>
-        <UseProgressIcon currentStep={currentStep} step={5} />
+        <UseProgressIcon
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+          step={5}
+        />
       </div>
       <div className="title" style={{ left: "calc(15% - 150px)" }}>
         <h4>School Profile Setup</h4>
@@ -431,46 +704,12 @@ const ProgressIndicator = ({ currentStep }) => {
 
 const PlanCard = ({ onNext, setOnboardingForm }) => {
   const planList = [
-    {
-      planName: "Acess to free wifie",
-      planLevel: 1,
-    },
-    {
-      planName: "Acess to free wifie",
-      planLevel: 1,
-    },
-    {
-      planName: "Acess to free wifie",
-      planLevel: 1,
-    },
-    {
-      planName: "Acess to free wifie",
-      planLevel: 1,
-    },
-    {
-      planName: "Acess to free wifie",
-      planLevel: 1,
-    },
-    {
-      planName: "Acess to free wifie",
-      planLevel: 2,
-    },
-    {
-      planName: "Acess to free wifie",
-      planLevel: 2,
-    },
-    {
-      planName: "Acess to free wifie",
-      planLevel: 2,
-    },
-    {
-      planName: "Acess to free wifie",
-      planLevel: 3,
-    },
-    {
-      planName: "Acess to free wifie",
-      planLevel: 3,
-    },
+    "Select Features – Choose the modules that fit your school's needs.",
+    "Enter Quantity – Specify the number of students or staff members.",
+    "Pick a Subscription Duration – Get discounts for longer plans!",
+    "See Your Total Cost – The calculator updates in real time.",
+    "Proceed to Payment – Subscribe seamlessly via secure payment gateways.",
+    "Enjoy discounts on long-term subscriptions and flexible pricing tailored to your institution!",
   ];
 
   const UseIcon = ({ planNumber, planItemNumber }) => {
@@ -498,75 +737,40 @@ const PlanCard = ({ onNext, setOnboardingForm }) => {
   };
 
   return (
-    <div className="plan-container">
+    <div className="plan-container onboarding-plan">
       <div className="onboarding-title">
-        <h3>Choose your plan</h3>
-        <p>Select a plan that works best for your school’s needs</p>
+        <h3>Smart Pricing Calculator</h3>
+        <p>Get an instant estimate for your subscription plan!</p>
       </div>
       <div className="plan-subcontainer">
-        <div className="plan-card" style={{ backgroundColor: "#ffadbc" }}>
-          <h3>Basic</h3>
-          <div className="amount-flex">
-            <h1>N20,000 </h1>
-            <p> / term</p>
-          </div>
-          <div className="btn-container">
-            <button onClick={() => handleNext("Basic")} className="btn">
-              Proceed
-            </button>
-          </div>
-          <div className="plan-item-container">
-            {planList.map((plan, index) => (
-              <div className="plan-item" key={index}>
-                <UseIcon planItemNumber={plan.planLevel} planNumber={1} />
-                <p>{plan.planName}</p>
-              </div>
-            ))}
-          </div>
-        </div>
         <div
           className="plan-card"
-          style={{ backgroundColor: "#711A75", color: "#fff" }}
+          style={{ backgroundColor: "#fff", padding: "20px" }}
         >
-          <h3>Pro</h3>
-          <div className="amount-flex">
-            <h1>N35,000 </h1>
-            <p> / term</p>
-          </div>
-          <div className="btn-container">
-            <button onClick={() => handleNext("Pro")} className="btn">
-              Proceed
-            </button>
-          </div>
+          <p style={{ lineHeight: 2 }}>
+            Our pricing calculator allows you to customize your subscription
+            based on the features your school needs. Simply select the features,
+            specify the number of school members, and choose your subscription
+            duration. The total cost updates instantly, helping you make an
+            informed decision before checkout.
+          </p>
           <div className="plan-item-container">
-            {planList.map((plan, index) => (
-              <div className="plan-item" key={index}>
-                <UseIcon planItemNumber={plan.planLevel} planNumber={2} />
-                <p>{plan.planName}</p>
+            {planList.map((obj) => (
+              <div className="plan-item">
+                <UseIcon planItemNumber={1} planNumber={2} />
+                <p>{obj}</p>
               </div>
             ))}
           </div>
         </div>
-        <div className="plan-card" style={{ backgroundColor: "#F9E2AF" }}>
-          <h3>Enterprise</h3>
-          <div className="amount-flex">
-            <h1>N50,000 </h1>
-            <p> / term</p>
-          </div>
-          <div className="btn-container">
-            <button onClick={() => handleNext("Enterprise")} className="btn">
-              Proceed
-            </button>
-          </div>
-          <div className="plan-item-container">
-            {planList.map((plan, index) => (
-              <div className="plan-item" key={index}>
-                <UseIcon planItemNumber={plan.planLevel} planNumber={3} />
-                <p>{plan.planName}</p>
-              </div>
-            ))}
-          </div>
+        <div className="plan-card">
+          <img src={priceCalculatorImg} alt="" srcset="" />
         </div>
+      </div>
+      <div className="btn-container">
+        <button onClick={() => handleNext("Pro")} className="btn">
+          Proceed
+        </button>
       </div>
     </div>
   );
@@ -598,7 +802,12 @@ const result_images = [
     image: result_6,
   },
 ];
-const Preferences = ({ setOnboardingForm, onNext }) => {
+const Preferences = ({
+  setOnboardingForm,
+  onboardingForm,
+  currentStep,
+  onNext,
+}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleOpenModal = () => setIsModalVisible(true);
@@ -623,7 +832,6 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
     classes: [],
     subjects: [],
     subject_to_class: [],
-    result_design_id: "",
   });
 
   useEffect(() => {
@@ -669,7 +877,7 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
     [],
   );
 
-  const [message, setMessagee] = useState("");
+  const [message, setMessage] = useState("");
 
   const [sessionData, setSessionData] = useState({
     session: "",
@@ -681,25 +889,25 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
   });
 
   const handleNext = () => {
-    if (currentSetting < 4) {
-      if (currentSetting === 1) {
-        if (isFormValid(sessionData, setMessagee)) {
-          setMessagee("");
-          setFormData((prevData) => ({
-            ...prevData,
-            session: sessionData,
-          }));
-          setCurrentSetting(currentSetting + 1);
-        }
+    if (currentSetting < 3) {
+      if (currentSetting === 1 && formData.classes.length === 0) {
+        setMessage("Please add at least one class.");
+        return;
+      } else if (currentSetting === 2 && formData.subjects.length === 0) {
+        setMessage("Please add at least one subject.");
+        return;
       } else {
+        setMessage("");
         setCurrentSetting(currentSetting + 1);
       }
     } else {
-      setOnboardingForm((prevData) => ({
-        ...prevData,
-        academicProfile: formData,
-      }));
-      onNext();
+      if (isFormValid(formData, setMessage)) {
+        setOnboardingForm((prevData) => ({
+          ...prevData,
+          academicProfile: formData,
+        }));
+        onNext();
+      }
     }
   };
 
@@ -711,6 +919,17 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
     });
   };
 
+  useEffect(() => {
+    if (isFormValid(onboardingForm.academicProfile, () => {})) {
+      setFormData((prevData) => ({
+        ...prevData,
+        ...onboardingForm.academicProfile,
+      }));
+      setSubjectList(onboardingForm.academicProfile.subjects);
+      setClassList(onboardingForm.academicProfile.classes);
+    }
+  }, [currentStep]);
+
   return (
     <div className="preferences-container">
       <div className="onboarding-title">
@@ -721,15 +940,11 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
         <div className="aside">
           <div className="preference-item">
             <div style={{ width: "10%" }}>
-              <UseProgressIcon currentStep={currentSetting} step={1} />
-            </div>
-            <div style={{ width: "90%", lineHeight: 1.4 }}>
-              <h3>Create Your Session & Terms</h3>
-            </div>
-          </div>
-          <div className="preference-item">
-            <div style={{ width: "10%" }}>
-              <UseProgressIcon currentStep={currentSetting} step={2} />
+              <UseProgressIcon
+                currentStep={currentSetting}
+                setCurrentStep={setCurrentSetting}
+                step={1}
+              />
             </div>
             <div style={{ width: "90%", lineHeight: 1.4 }}>
               <h3>Create Your Classes</h3>
@@ -737,7 +952,11 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
           </div>
           <div className="preference-item">
             <div style={{ width: "10%" }}>
-              <UseProgressIcon currentStep={currentSetting} step={3} />
+              <UseProgressIcon
+                currentStep={currentSetting}
+                setCurrentStep={setCurrentSetting}
+                step={2}
+              />
             </div>
             <div style={{ width: "90%", lineHeight: 1.4 }}>
               <h3>Create Your Subjects</h3>
@@ -745,116 +964,33 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
           </div>
           <div className="preference-item">
             <div style={{ width: "10%", lineHeight: 1.4 }}>
-              <UseProgressIcon currentStep={currentSetting} step={4} />
+              <UseProgressIcon
+                currentStep={currentSetting}
+                setCurrentStep={setCurrentSetting}
+                step={3}
+              />
             </div>
             <div style={{ width: "90%", lineHeight: 1.4 }}>
               <h3>Assign Subjects to Classes</h3>
             </div>
           </div>
-
-          {/* <div className="preference-item">
-            <div style={{ width: "10%" }}>
-              <UseProgressIcon currentStep={currentSetting} step={5} />
-            </div>
-            <div style={{ width: "90%", lineHeight: 1.3 }}>
-              <h3>Result Format Preference</h3>
-            </div>
-          </div> */}
         </div>
+
         {currentSetting === 1 && (
-          <div className="main">
-            <div className="main-preference-headidng">
-              <h3>Create Your Session and Terms</h3>
-              <p style={{ textAlign: "center" }}>
-                Easily create new classes by adding their names and assigning
-                subjects.
-              </p>
-            </div>
-            <div className="session-profile overflow">
-              <CustomSelectionInput
-                placeholder={"Session"}
-                name={"session"}
-                value={sessionData.session}
-                handleChange={handleSessionChange}
-                data={[
-                  "2022/2023",
-                  "2023/2024",
-                  "2024/2025",
-                  "2025/2026",
-                  "2026/2027",
-                  "2027/2028",
-                  "2028/2029",
-                  "2029/2030",
-                ]}
-                icon={<FiUserPlus className="icons" />}
-              />
-              <div style={{ width: "100%" }}>
-                <label htmlFor="date">Session Start Date</label>
-                <CustomTextInput
-                  name={"start_date"}
-                  placeholder={"Session Start Date"}
-                  value={sessionData.start_date}
-                  handleChange={handleSessionChange}
-                  icon={<AiFillCalendar className="icons" />}
-                />
-              </div>
-              <div style={{ width: "100%" }}>
-                <label htmlFor="date">Session End Date</label>
-                <CustomTextInput
-                  name={"end_date"}
-                  placeholder={"Session End Date"}
-                  value={sessionData.end_date}
-                  handleChange={handleSessionChange}
-                  icon={<AiFillCalendar className="icons" />}
-                />
-              </div>
-              <h4>Term Details</h4>
-              <CustomTextInput
-                name={"term_name"}
-                placeholder={"Name of term e.g First Term"}
-                value={sessionData.term_name}
-                handleChange={handleSessionChange}
-                icon={<FiUser className="icons" />}
-              />
-              <div style={{ width: "100%" }}>
-                <label htmlFor="date">Term Start Date</label>
-                <CustomTextInput
-                  name={"term_start_date"}
-                  placeholder={"First Term Start Date"}
-                  value={sessionData.term_start_date}
-                  handleChange={handleSessionChange}
-                  icon={<AiFillCalendar className="icons" />}
-                />
-              </div>
-              <div style={{ width: "100%" }}>
-                <label htmlFor="date">Term End Date</label>
-                <CustomTextInput
-                  name={"term_end_date"}
-                  placeholder={"First Term End Date"}
-                  value={sessionData.term_end_date}
-                  handleChange={handleSessionChange}
-                  icon={<AiFillCalendar className="icons" />}
-                />
-              </div>
-            </div>
-            {message && <AlertBadge message={message} />}
-          </div>
-        )}
-        {currentSetting === 2 && (
           <div className="main">
             <div className="main-preference-headidng">
               <h3>Create Your Classes</h3>
               <p style={{ textAlign: "center" }}>
-                Easily create new classes by adding their names and assigning
-                subjects. This helps organize your school’s curriculum and
-                manage subject distribution efficiently.
+                Create your classes by specifying a name and setting mandatory
+                bills for each. These bills can be modified later in the
+                dashboard settings.
               </p>
             </div>
-            {formData.classes.length > 0 ? (
+            {formData.classes?.length > 0 ? (
               <div className="list-parent">
                 <div className="list-container">
                   {formData.classes.map((obj, index) => (
-                    <ListItem
+                    <ListItemOnboarding
                       object={obj.className}
                       index={index + 1}
                       handleEdit={handleEdit}
@@ -863,11 +999,11 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
                   ))}
                 </div>
                 <div className="preferences-footer">
-                  <div className="btn-container">
-                    <button onClick={handleOpenModal} className="btn">
-                      Add
-                    </button>
-                  </div>
+                  <CustomSmallButton
+                    text="Add class"
+                    runFunction={handleOpenModal}
+                    icon={<PiPlusCircleBold className="use-font-style" />}
+                  />
                 </div>
               </div>
             ) : (
@@ -877,9 +1013,11 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
                   style={{ transform: "scale(1.2)" }}
                 />
                 <p>No records yet</p>
-                <div className="btn-container">
-                  <button onClick={handleOpenModal}>Add record</button>
-                </div>
+                <CustomSmallButton
+                  text="Add record"
+                  runFunction={handleOpenModal}
+                  icon={<PiPlusCircleBold className="use-font-style" />}
+                />
               </div>
             )}
 
@@ -893,34 +1031,26 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
             />
           </div>
         )}
-        {currentSetting === 3 && (
+        {currentSetting === 2 && (
           <div className="main">
             <div className="main-preference-headidng">
               <h3>Create Your Subjects</h3>
               <p style={{ textAlign: "center" }}>
-                Easily create new classes by adding their names and assigning
-                subjects. This helps organize your school’s curriculum and
-                manage subject distribution efficiently.
+                Create your subjects by specifying their names. Subject names
+                can be modified later in the dashboard settings.
               </p>
             </div>
-            {formData.subjects.length > 0 ? (
+            {formData.subjects?.length > 0 ? (
               <div className="list-parent">
                 <div className="list-container">
                   {formData.subjects.map((obj, index) => (
-                    <ListItem
+                    <ListItemOnboarding
                       object={obj}
                       index={index + 1}
                       handleEdit={handleEdit}
                       handleDelete={handleSubjectDelete}
                     />
                   ))}
-                </div>
-                <div className="preferences-footer">
-                  <div className="btn-container">
-                    <button onClick={handleOpenModal} className="btn">
-                      Add
-                    </button>
-                  </div>
                 </div>
               </div>
             ) : (
@@ -930,9 +1060,20 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
                   style={{ transform: "scale(1.2)" }}
                 />
                 <p>No records yet</p>
-                <div className="btn-container">
-                  <button onClick={handleOpenModal}>Add record</button>
-                </div>
+                <CustomSmallButton
+                  text="Add record"
+                  runFunction={handleOpenModal}
+                  icon={<PiPlusCircleBold className="use-font-style" />}
+                />
+              </div>
+            )}
+            {formData.subjects?.length > 0 && (
+              <div className="preferences-footer">
+                <CustomSmallButton
+                  text="Add subject"
+                  runFunction={handleOpenModal}
+                  icon={<PiPlusCircleBold className="use-font-style" />}
+                />
               </div>
             )}
 
@@ -946,99 +1087,75 @@ const Preferences = ({ setOnboardingForm, onNext }) => {
             />
           </div>
         )}
-        {currentSetting === 4 && (
+        {currentSetting === 3 && (
           <div className="main">
             <div className="main-preference-headidng">
               <h3>Assign Subjects to Classes</h3>
               <p style={{ textAlign: "center" }}>
-                Allocate subjects to the appropriate classes based on the
-                curriculum.
+                Assign subjects to their respective classes in alignment with
+                your school's curriculum. This can be modified later in the
+                dashboard settings.
               </p>
             </div>
-            <div>
+            <div
+              className="overflow"
+              style={{ height: "auto", overflow: "auto" }}
+            >
               <SubjectDropdown
                 classList={classList}
                 subjectsList={subjectList}
                 handleSubject={handleSubject}
+                subjectObject={formData?.subject_to_class || {}}
               />
             </div>
-            <p style={{ fontSize: "12px" }}>
-              Note: Once you select subjects for a class, the same subjects will
-              automatically be filled in the next class to save you time. Please
-              continue selecting subjects in a row-wise manner for consistency.
-            </p>
           </div>
         )}
-
-        {/* {currentSetting === 5 && (
-          <div className="main">
-            <div className="main-preference-headidng">
-              <h3>Result Format Preference</h3>
-              <p>Choose a result design that suits your taste format.</p>
-            </div>
-            <div>
-              <div className="image-selector overflow">
-                {result_images.map((image, index) => (
-                  <label key={index} className="image-option">
-                    <input
-                      type="radio"
-                      name="image"
-                      value={image.image}
-                      checked={selectedImage === image.image}
-                      onChange={() => handleSelectResult(image)}
-                    />
-                    <img
-                      src={image.image}
-                      alt={`Option ${index + 1}`}
-                      className={
-                        selectedImage === image.image ? "selected" : ""
-                      }
-                    />
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-        )} */}
       </div>
-      <div className="btn-container">
-        <button onClick={handleNext} className="btn">
-          Next
-        </button>
+      {message && <AlertBadge message={message} />}
+      <div className="next-btn">
+        <CustomSmallButton
+          text={"Next"}
+          runFunction={handleNext}
+          icon={<PiArrowRightBold className="use-font-style" />}
+        />
       </div>
     </div>
   );
 };
 
 const ConfirmationPage = ({ onboardingForm }) => {
-  useEffect(() => {
-    console.log(onboardingForm);
-  }, [onboardingForm]);
-
-  function getImageById(id) {
-    const result = result_images.find((item) => item.id === id);
-    return result ? result.image : null;
-  }
+  const [modalMessage, setModalMessage] = useState("");
+  const [successStatus, setSuccessStatus] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [schoolUrl, setSchoolUrl] = useState("");
 
   const handleOnboarding = async () => {
-    console.log("result", onboardingForm);
+    setLoading(true);
     try {
-      const url = "http://127.0.0.1:8000/api/onboarding/";
+      const url = `${apiUrl}/onboarding/`;
       const request = await fetch(url, {
         method: "POST",
         body: JSON.stringify(onboardingForm),
         headers: {
           "Content-Type": "application/json",
+          ApiAuthorization: apiKey,
         },
       });
 
       let response = await request.json();
+      setLoading(false);
       if (request.status === 201) {
-        console.log("okayyy", response);
+        setSchoolUrl(response.school_url);
+        setModalMessage(response.message);
+        setSuccessStatus(true);
       } else {
-        console.log(response);
+        setModalMessage(response.message);
+        setSuccessStatus(false);
       }
     } catch (error) {
+      setLoading(false);
+      setModalMessage("An error occured, please try again");
+      setSuccessStatus(false);
       console.error(error);
     }
   };
@@ -1100,6 +1217,21 @@ const ConfirmationPage = ({ onboardingForm }) => {
           </div>
           <div className="confirmation-item">
             <h3>Admin Profile</h3>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <div className="display-image">
+                <img
+                  src={onboardingForm?.adminProfile?.profile_image}
+                  alt=""
+                  srcset=""
+                />
+              </div>
+            </div>
             <div className="confirmation-details">
               <div className="profile-detail-list">
                 <h4>Full Name: </h4>
@@ -1115,7 +1247,7 @@ const ConfirmationPage = ({ onboardingForm }) => {
               </div>
             </div>
           </div>
-          <div className="confirmation-item">
+          {/* <div className="confirmation-item">
             <h3>Plan Profile</h3>
             <div className="confirmation-details">
               <div className="profile-detail-list">
@@ -1123,10 +1255,10 @@ const ConfirmationPage = ({ onboardingForm }) => {
                 <p>{onboardingForm.planProfile.plan} Plan</p>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="confirmation-item">
-          <h3>Academic Profile</h3>
+          {/* <h3>Academic Profile</h3>
           <h4>Session/Term</h4>
           {Object.entries(onboardingForm.academicProfile.session).map(
             ([key, value], index) => (
@@ -1135,7 +1267,7 @@ const ConfirmationPage = ({ onboardingForm }) => {
                 <p>{value} </p>
               </div>
             ),
-          )}
+          )} */}
           <div className="confirmation-details">
             <table
               border="1"
@@ -1150,7 +1282,7 @@ const ConfirmationPage = ({ onboardingForm }) => {
               </thead>
               <tbody>
                 {Object.entries(
-                  onboardingForm.academicProfile.subject_to_class,
+                  onboardingForm.academicProfile?.subject_to_class,
                 ).map(([key, value], index) => (
                   <tr
                     key={key}
@@ -1190,49 +1322,77 @@ const ConfirmationPage = ({ onboardingForm }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {onboardingForm.academicProfile.classes.map((item, index) => (
-                    <tr
-                      key={index}
-                      className={index % 2 === 1 ? "odd-table" : "even-table"}
-                    >
-                      <td>{index + 1}</td>
-                      <td>{item.className}</td>
-                      <td>
-                        <ul>
-                          {item.bills.map((bill, index) => (
-                            <li key={index}>
-                              {bill.billName} - ₦{bill.billAmount}
+                  {onboardingForm?.academicProfile?.classes?.map(
+                    (item, index) => (
+                      <tr
+                        key={index}
+                        className={index % 2 === 1 ? "odd-table" : "even-table"}
+                      >
+                        <td>{index + 1}</td>
+                        <td>{item.className}</td>
+                        <td>
+                          <ul>
+                            {item.bills.map((bill, index) => (
+                              <li key={index}>
+                                {bill.billName} - ₦
+                                {formatAmount(bill.billAmount)}
+                              </li>
+                            ))}
+                            <li key={index} style={{ fontWeight: "600" }}>
+                              Total - ₦
+                              {formatAmount(
+                                item.bills.reduce(
+                                  (total, bill) =>
+                                    total + (parseFloat(bill.billAmount) || 0),
+                                  0,
+                                ),
+                              )}
                             </li>
-                          ))}
-                          <li key={index} style={{ fontWeight: "600" }}>
-                            Total - ₦
-                            {item.bills.reduce(
-                              (total, bill) =>
-                                total + (parseFloat(bill.billAmount) || 0),
-                              0,
-                            )}
-                          </li>
-                        </ul>
-                      </td>
-                    </tr>
-                  ))}
+                          </ul>
+                        </td>
+                      </tr>
+                    ),
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
         </div>
       </div>
-      <div className="btn-container">
+      <div className="next-btn">
+        <CustomSmallButton
+          text={loading ? <Loading /> : "Submit"}
+          disabled={loading}
+          runFunction={handleOnboarding}
+          icon={!loading && <PiCheckCircleBold className="use-font-style" />}
+        />
+      </div>
+      {/* <div className="btn-container">
         <button onClick={handleOnboarding} className="btn">
           Submit
         </button>
-      </div>
+      </div> */}
+      <AlertModal
+        isVisible={successStatus && schoolUrl ? true : false || modalMessage}
+        onClose={() => {
+          setModalMessage("");
+          if (schoolUrl) {
+            window.location.replace(schoolUrl);
+          }
+        }}
+        message={modalMessage}
+        success={successStatus}
+      />
     </div>
   );
 };
 
 const Onboarding = () => {
   const [currentForm, setCurrentForm] = useState(1);
+
+  useEffect(() => {
+    document.title = "Onboarding - Eduterex";
+  }, []);
 
   const formVariants = {
     initial: (direction) => ({
@@ -1255,6 +1415,9 @@ const Onboarding = () => {
 
   return (
     <div className="onboarding-container">
+      <div className="poweredby-tag">
+        <PoweredBy dark={true} />
+      </div>
       <div className="animation-container">
         <AnimatePresence custom="next" mode="wait">
           {currentForm === 1 && (
@@ -1266,10 +1429,12 @@ const Onboarding = () => {
               animate="animate"
               exit="exit"
               transition={{ duration: 0.5 }}
-              style={{ width: "100%" }}
+              style={{ width: "100%", height: "100%" }}
             >
               <SchoolProfile
                 setOnboardingForm={setOnboardingForm}
+                onboardingForm={onboardingForm}
+                currentStep={currentForm}
                 onNext={() => setCurrentForm(2)}
               />
             </motion.div>
@@ -1284,10 +1449,12 @@ const Onboarding = () => {
               animate="animate"
               exit="exit"
               transition={{ duration: 0.5 }}
-              style={{ width: "100%" }}
+              style={{ width: "100%", height: "100%" }}
             >
               <AdminForm
                 setOnboardingForm={setOnboardingForm}
+                onboardingForm={onboardingForm}
+                currentStep={currentForm}
                 onNext={() => setCurrentForm(3)}
               />
             </motion.div>
@@ -1302,7 +1469,7 @@ const Onboarding = () => {
               animate="animate"
               exit="exit"
               transition={{ duration: 0.5 }}
-              style={{ width: "100%" }}
+              style={{ width: "100%", height: "100%" }}
             >
               <PlanCard
                 setOnboardingForm={setOnboardingForm}
@@ -1320,10 +1487,17 @@ const Onboarding = () => {
               animate="animate"
               exit="exit"
               transition={{ duration: 0.5 }}
-              style={{ width: "100%" }}
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
             >
               <Preferences
                 setOnboardingForm={setOnboardingForm}
+                onboardingForm={onboardingForm}
+                currentStep={currentForm}
                 onNext={() => setCurrentForm(5)}
               />
             </motion.div>
@@ -1338,7 +1512,7 @@ const Onboarding = () => {
               animate="animate"
               exit="exit"
               transition={{ duration: 0.5 }}
-              style={{ width: "100%" }}
+              style={{ width: "100%", height: "100%" }}
             >
               <ConfirmationPage onboardingForm={onboardingForm} />
             </motion.div>
@@ -1346,7 +1520,13 @@ const Onboarding = () => {
         </AnimatePresence>
       </div>
       <div style={{ marginTop: "1rem", width: "100%" }}>
-        <ProgressIndicator currentStep={currentForm} />
+        <ProgressIndicator
+          currentStep={currentForm}
+          setCurrentStep={setCurrentForm}
+        />
+      </div>
+      <div className="poweredby-tag-mobile">
+        <PoweredBy dark={true} center={true} />
       </div>
     </div>
   );

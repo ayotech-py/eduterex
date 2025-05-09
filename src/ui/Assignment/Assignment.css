@@ -1,0 +1,169 @@
+.ui-list-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+
+.assignment-preview {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 100%;
+  overflow: auto;
+}
+
+.assignment-preview h3 {
+  font-weight: 600;
+}
+
+.assignment-file-upload {
+  align-items: flex-start;
+}
+
+.assignment-add-image {
+  height: 250px;
+  width: auto;
+  object-fit: "contain";
+}
+
+.student-submissions-div {
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+  padding: 15px 0px;
+}
+
+.student-submissions-div .submission-card {
+  display: flex;
+  flex-direction: column;
+  background-color: #f3e8ff;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.student-submissions-div .submission-card .submission-card-info {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.student-submissions-div .submission-card .submission-card-info p {
+  font-weight: 500;
+  color: #711a75;
+}
+
+.student-submissions-div .submission-card .submission-card-info img {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.sc-profile-div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 25%;
+}
+
+.sc-action {
+  padding: 5px;
+  background-color: #fff;
+  border-radius: 5px;
+  color: #711a75;
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.sc-action:hover {
+  background-color: #711a75;
+  color: #fff;
+}
+
+.submission-card-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.submission-card-detail span {
+  font-weight: 600;
+}
+
+.show-sub-dropdown {
+  max-height: 350px;
+  overflow: auto;
+  transition:
+    max-height 0.3s ease-in,
+    opacity 0.3s ease-in;
+  opacity: 1;
+}
+
+.hide-sub-dropdown {
+  max-height: 0;
+  overflow: hidden;
+  transition:
+    max-height 0.3s ease-out,
+    opacity 0.3s ease-out;
+  opacity: 0;
+}
+
+.sc-show-in-mobile {
+  display: block;
+}
+
+.ass-point-input {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.ass-point-input input {
+  width: 50px !important;
+  max-width: 50px !important;
+}
+
+.ass-point-input p {
+  font-weight: 600;
+}
+
+.ass-point-input button {
+  padding: 5px 15px 5px 15px !important;
+  font-size: 12px !important;
+}
+
+.ui-classroom .file-preview {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f5f5f5;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 850px) {
+  .assignment-add-image {
+    height: auto;
+    width: 100%;
+    object-fit: "contain";
+  }
+
+  .sc-show-in-mobile {
+    display: none;
+  }
+
+  .sc-profile-div {
+    width: 70%;
+  }
+
+  .assignment-file-upload {
+    width: 100%;
+    align-items: flex-start;
+  }
+}

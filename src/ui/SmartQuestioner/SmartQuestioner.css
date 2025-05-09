@@ -1,0 +1,97 @@
+.sq-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1%;
+}
+
+.sq-container .sq-aside {
+  width: 30%;
+  border-radius: 15px;
+  background-color: #fff;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sq-aside-inner,
+.sq-container .sq-main {
+  height: 100%;
+  overflow: auto;
+}
+
+.sq-container .sq-main .ui-questionbank-content {
+  padding: 0px;
+}
+
+.sq-container .ui-questionbank-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.sq-container .sq-main-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 69%;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 15px;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 15px;
+}
+
+.sq-all-files {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sq-all-files .checkbox-item input {
+  margin-left: 15px;
+}
+
+.sq-container .file-preview {
+  width: 75% !important;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f5f5f5;
+  gap: 10px;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+@media screen and (max-width: 850px) {
+  .sq-container .file-preview {
+    width: 100% !important;
+  }
+
+  .sq-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+    overflow: auto;
+  }
+
+  .sq-container .sq-aside {
+    width: 100%;
+    height: max-content;
+  }
+
+  .sq-container .sq-main-container {
+    width: 100%;
+    box-sizing: border-box;
+    height: max-content;
+  }
+
+  .sq-container .ui-questionbank-content {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

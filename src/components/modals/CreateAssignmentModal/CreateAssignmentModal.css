@@ -1,0 +1,106 @@
+.create-assignment {
+  width: 70%;
+  height: 75vh;
+}
+
+.create-assignment .modal-sub-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 0px;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+.create-assignment .modal-sub-container .assignment-info-section {
+  width: 33.33%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0px 15px;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
+}
+
+.create-assignment .modal-sub-container .selected-questions-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0px 15px;
+  box-sizing: border-box;
+  width: 33.33%;
+  border-left: 2px solid #711a75;
+  height: 100%;
+  overflow: auto;
+}
+
+.create-assignment .modal-sub-container .choose-question-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0px 15px;
+  box-sizing: border-box;
+  width: 33.33%;
+  border-left: 2px solid #711a75;
+  height: 100%;
+}
+
+.create-assignment .choose-question-div {
+  overflow: auto;
+}
+
+.create-assignment .radio-group input {
+  margin-left: 10px;
+}
+
+.create-assignment .modal-sub-container .choose-question-div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media screen and (max-width: 850px) {
+  .create-assignment {
+    width: 80% !important;
+    height: 75vh;
+    padding: 5px 15px 15px 15px;
+    gap: 15px;
+  }
+
+  .create-assignment .modal-sub-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .create-assignment .modal-sub-container .assignment-info-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0px;
+    box-sizing: border-box;
+  }
+
+  .create-assignment .modal-sub-container .selected-questions-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0px 0px;
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+  }
+
+  .create-assignment .modal-sub-container .choose-question-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0px 0px;
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+  }
+}

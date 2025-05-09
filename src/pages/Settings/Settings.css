@@ -1,0 +1,112 @@
+.settings-container {
+  padding: 35px;
+  box-sizing: border-box;
+  overflow: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.settings-container .all-settings {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  flex: 1;
+}
+
+.settings-container .setting-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.settings-container .new-table-style {
+  margin-top: 0px;
+  width: 100%;
+}
+
+.settings-container .new-table-style input {
+  width: max-content;
+}
+
+.setting-action-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.setting-action-button-single {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.settings-container p {
+  text-align: center;
+}
+
+.settings-container .signup-form {
+  padding-left: 0%;
+  padding-right: 0%;
+  width: 100%;
+}
+
+.settings-container .input-form-container,
+.settings-container .form-flex {
+  width: 100%;
+}
+
+.settings-container .signatory-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.settings-container .result-type {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.settings-tables {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+@media screen and (min-width: 851px) and (max-width: 1300px) {
+  .settings-container {
+    padding: 20px;
+  }
+
+  .settings-container .all-settings {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .settings-container {
+    padding: 20px;
+  }
+
+  .settings-container .all-settings {
+    width: 100%;
+  }
+
+  .settings-container .signatory-container {
+    flex-direction: column;
+  }
+
+  .number-input,
+  .assesment-container input {
+    max-width: 50px !important;
+  }
+
+  .text-input {
+    width: 100px !important;
+  }
+}

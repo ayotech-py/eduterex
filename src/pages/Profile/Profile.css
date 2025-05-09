@@ -1,0 +1,81 @@
+.profile-container {
+  margin: 35px;
+  padding: 35px;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  height: calc(100% - 70px);
+  overflow: auto;
+}
+
+.p-top-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.p-top-section .p-top-section-right {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.p-top-section img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-container h3 {
+  font-weight: 600;
+}
+
+.p-label {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.p-info-card .p-value {
+  background-color: #f3e8ff;
+  padding: 15px 20px;
+  border-radius: 5px;
+}
+
+.p-staff-info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.change-password {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+@media screen and (max-width: 850px) {
+  .profile-container {
+    margin: 25px 10px;
+    padding: 25px 10px;
+  }
+
+  .p-top-section {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .p-top-section img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .p-staff-info {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

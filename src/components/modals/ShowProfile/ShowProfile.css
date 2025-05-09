@@ -1,0 +1,35 @@
+.modal-content h2,
+.modal-content-student h2 {
+  margin-bottom: 10px;
+}
+
+.modal-content button:hover,
+.modal-content-student button:hover {
+  background-color: #fff;
+  color: #711a75;
+  border: 1px solid #711a75;
+}
+
+.profile-upload img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.input-flex {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+
+.profile_list {
+  display: flex;
+  gap: 10px;
+}
+
+@media screen and (max-width: 650px) {
+  .modal-content {
+    width: 70%;
+  }
+}

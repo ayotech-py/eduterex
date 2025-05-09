@@ -1,0 +1,29 @@
+.result-helper {
+  display: grid;
+  grid-template-columns: 30% 70%;
+}
+
+.result-helper .comment {
+  height: 140px;
+}
+
+.result-helper .bottom-helper {
+  margin-top: -18px;
+}
+
+.helper-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+  .result-helper .comment {
+    height: 60px;
+  }
+
+  .result-helper {
+    display: grid;
+    grid-template-columns: 40% 60%;
+  }
+}

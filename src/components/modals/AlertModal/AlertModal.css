@@ -1,0 +1,40 @@
+.modal-content button:hover {
+  background-color: #fff;
+  color: #711a75;
+  border: 1px solid #711a75;
+}
+
+.modal-content .alert-icon-success {
+  color: #28a745;
+  font-size: 100px;
+}
+
+.modal-content .alert-icon-fail {
+  color: #dc3545;
+  font-size: 80px;
+}
+
+.alert-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.3s ease;
+}
+
+.alert-container p {
+  line-height: 1.5;
+  font-size: 14px !important;
+}
+
+.option-btn-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.option-btn-container .no-btn-option button {
+  background-color: #f3e8ff;
+  color: #711a75;
+}
