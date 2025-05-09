@@ -64,5 +64,19 @@
     "prettier": "^3.4.2",
     "prettier-eslint": "^16.3.0",
     "web-vitals": "^4.2.4"
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "babel.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Oluwamayowaeniitan/eduterex-fork.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Oluwamayowaeniitan/eduterex-fork/issues"
+  },
+  "homepage": "https://github.com/Oluwamayowaeniitan/eduterex-fork#readme"
 }
